@@ -1,4 +1,4 @@
-HOST_GCC=g++
+CXX=g++
 TARGET_GCC=gcc
 PLUGIN_SOURCE_FILES= plugin_instrument_attribute.c
 VERIFY_SOURCE_FILES= verify.c
@@ -8,7 +8,7 @@ CXXFLAGS+= -I$(GCCPLUGINS_DIR)/include -fPIC -O2
 all: plugin
 
 plugin.so: $(PLUGIN_SOURCE_FILES)
-	$(HOST_GCC) -shared $(CXXFLAGS) $^ -o $@
+	$(CXX) -shared $(CXXFLAGS) $^ -o $@
 
 plugin: plugin.so
 
@@ -17,4 +17,4 @@ clean:
 	rm -f verify
 
 verify: ${VERIFY_SOURCE_FILES}
-	$(HOST_GCC) $(CXXFLAGS) -fplugin=./plugin.so $^ -o $@
+	$(CXX) $(CXXFLAGS) -fplugin=./plugin.so $^ -o $@

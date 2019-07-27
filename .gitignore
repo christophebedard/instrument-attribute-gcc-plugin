@@ -1,5 +1,6 @@
 # executables
 verify
+test
 
 # Prerequisites
 *.d

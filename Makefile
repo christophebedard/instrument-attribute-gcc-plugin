@@ -18,3 +18,6 @@ clean:
 
 verify: plugin.so
 	$(CXX) $(CXXFLAGS) -fplugin=./plugin.so -c -x c++ /dev/null -o /dev/null
+
+test: ${TEST_SOURCE_FILES}
+	$(CXX) $(CXXFLAGS) -fplugin=./plugin.so $(CXXFLAGS) $^ -o $@

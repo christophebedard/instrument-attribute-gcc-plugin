@@ -10,4 +10,4 @@ plugin.so: $(PLUGIN_SOURCE_FILES)
 	$(HOST_GCC) -shared $(CXXFLAGS) $^ -o $@
 
 clean:
-	rm plugin.so
+	rm -f plugin.so

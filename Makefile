@@ -16,5 +16,5 @@ clean:
 	rm -f plugin.so
 	rm -f verify
 
-verify: ${VERIFY_SOURCE_FILES}
-	$(CXX) $(CXXFLAGS) -fplugin=./plugin.so $^ -o $@
+verify: plugin.so
+	$(CXX) $(CXXFLAGS) -fplugin=./plugin.so -c -x c++ /dev/null -o /dev/null

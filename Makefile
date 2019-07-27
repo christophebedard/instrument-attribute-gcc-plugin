@@ -17,4 +17,4 @@ clean:
 	rm -f verify
 
 verify: ${VERIFY_SOURCE_FILES}
-	$(HOST_GCC) $(CXXFLAGS) -fplugin=./plugin.so -c $^ -o $@
+	$(HOST_GCC) $(CXXFLAGS) -fplugin=./plugin.so $^ -o $@

@@ -1,4 +1,4 @@
-HOST_GCC=gcc
+HOST_GCC=g++
 TARGET_GCC=gcc
 PLUGIN_SOURCE_FILES= plugin_instrument_attribute.c
 GCCPLUGINS_DIR:= $(shell $(TARGET_GCC) -print-file-name=plugin)

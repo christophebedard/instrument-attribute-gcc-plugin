@@ -6,3 +6,6 @@ CXXFLAGS+= -I$(GCCPLUGINS_DIR)/include -fPIC -O2
 
 plugin.so: $(PLUGIN_SOURCE_FILES)
 	$(HOST_GCC) -shared $(CXXFLAGS) $^ -o $@
+
+clean:
+	rm plugin.so

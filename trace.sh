@@ -1,6 +1,6 @@
 #!/bin/bash
 
-lttng create test --output=./test-traces/
+lttng create test --output=./test-trace/
 
 lttng enable-event -c testchan -u lttng_ust_statedump:start
 lttng enable-event -c testchan -u lttng_ust_statedump:end

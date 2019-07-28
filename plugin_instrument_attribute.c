@@ -46,6 +46,10 @@ void handle_all_passes_start(void * event_data, void * data)
     {
         if (lookup_attribute("instrument_function", DECL_ATTRIBUTES(fndecl)) != NULL_TREE)
         {
+            std::cout << "instrument_function: "
+                << "(" << DECL_SOURCE_FILE(fndecl) << ":" << DECL_SOURCE_LINE(fndecl) << ") "
+                << get_name(fndecl)
+                << std::endl;
             DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT(fndecl) = 0;
         }
         else

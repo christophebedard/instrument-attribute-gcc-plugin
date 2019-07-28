@@ -7,6 +7,10 @@
 int plugin_is_GPL_compatible;
 
 bool is_debug = false;
+#define DEBUG(msg) \
+    if (is_debug) { \
+        std::cout << msg; \
+    }
 
 static struct plugin_info info = {
     "0.0.1",
@@ -39,10 +43,10 @@ void handle(void * event_data, void * data)
         // otherwise explicitly disable it
         if (lookup_attribute("instrument_function", DECL_ATTRIBUTES(fndecl)) != NULL_TREE)
         {
-            std::cout << "instrument_function: "
+            DEBUG("instrument_function: "
                 << "(" << DECL_SOURCE_FILE(fndecl) << ":" << DECL_SOURCE_LINE(fndecl) << ") "
                 << get_name(fndecl)
-                << std::endl;
+                << std::endl);
             DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT(fndecl) = 0;
         }
         else
@@ -62,7 +66,6 @@ void parse_plugin_args(struct plugin_name_args * plugin_info)
         // Check for debug argument, and enable debug mode if found
         if (strncmp(argv[i].key, "debug", 5) == 0)
         {
-            std::cout << "DEBUG MODE" << std::endl;
             is_debug = true;
         }
     }
@@ -72,9 +75,9 @@ int plugin_init(
     struct plugin_name_args * plugin_info,
     struct plugin_gcc_version * version)
 {
-    std::cout << "Plugin: instrument_function attribute" << std::endl;
-
     parse_plugin_args(plugin_info);
+
+    DEBUG("Plugin: instrument_function attribute" << std::endl);
 
     register_callback(
         plugin_info->base_name,

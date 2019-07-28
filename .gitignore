@@ -2,6 +2,9 @@
 verify
 test
 
+# directories
+.vscode/
+
 # Prerequisites
 *.d
 

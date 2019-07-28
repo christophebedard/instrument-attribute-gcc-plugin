@@ -2,7 +2,7 @@
 
 void __attribute__((instrument_function)) an_instrumented_function()
 {
-    std::cout << "this is instrumented here" << std::endl;
+    std::cout << "this is instrumented" << std::endl;
 }
 
 void not_instrumented_function()

@@ -1,4 +1,4 @@
-#include <iostream>
+#include <stdio.h>
 
 #include "gcc-plugin.h"
 #include "plugin-version.h"
@@ -7,9 +7,9 @@
 int plugin_is_GPL_compatible;
 
 bool is_debug = false;
-#define DEBUG(msg) \
+#define DEBUG(...) \
     if (is_debug) { \
-        std::cout << msg; \
+        printf(__VA_ARGS__); \
     }
 
 static struct plugin_info info = {
@@ -43,10 +43,10 @@ void handle(void * event_data, void * data)
         // otherwise explicitly disable it
         if (lookup_attribute("instrument_function", DECL_ATTRIBUTES(fndecl)) != NULL_TREE)
         {
-            DEBUG("instrument_function: "
-                << "(" << DECL_SOURCE_FILE(fndecl) << ":" << DECL_SOURCE_LINE(fndecl) << ") "
-                << get_name(fndecl)
-                << std::endl);
+            DEBUG("instrument_function: (%s:%d) %s\n",
+                DECL_SOURCE_FILE(fndecl),
+                DECL_SOURCE_LINE(fndecl),
+                get_name(fndecl));
             DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT(fndecl) = 0;
         }
         else
@@ -77,7 +77,7 @@ int plugin_init(
 {
     parse_plugin_args(plugin_info);
 
-    DEBUG("Plugin: instrument_function attribute" << std::endl);
+    DEBUG("Plugin: instrument_function attribute\n");
 
     register_callback(
         plugin_info->base_name,

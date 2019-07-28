@@ -87,14 +87,14 @@ int plugin_init(
 
     register_callback(
         plugin_info->base_name,
-        PLUGIN_FINISH_PARSE_FUNCTION,
-        handle,
+        PLUGIN_ATTRIBUTES,
+        register_attributes,
         NULL);
 
     register_callback(
         plugin_info->base_name,
-        PLUGIN_ATTRIBUTES,
-        register_attributes,
+        PLUGIN_FINISH_PARSE_FUNCTION,
+        handle,
         NULL);
     return 0;
 }

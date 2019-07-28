@@ -1,27 +1,25 @@
 CXX=g++
 TARGET_GCC=gcc
-PLUGIN_SOURCE_FILES= plugin_instrument_attribute.c
+PLUGIN_SOURCE_FILES= instrument_attribute.c
 TEST_SOURCE_FILES= test.c
 GCCPLUGINS_DIR:= $(shell $(TARGET_GCC) -print-file-name=plugin)
 CXXFLAGS+= -I$(GCCPLUGINS_DIR)/include -fPIC -O2
 
-all: plugin
+all: instrument_attribute.so
 
-plugin: plugin.so
-
-plugin.so: $(PLUGIN_SOURCE_FILES)
+instrument_attribute.so: $(PLUGIN_SOURCE_FILES)
 	$(CXX) -shared $(CXXFLAGS) $^ -o $@
 
 clean:
-	rm -f plugin.so
+	rm -f instrument_attribute.so
 	rm -f test
 	rm -rf test-trace/
 
-verify: plugin.so
-	$(CXX) $(CXXFLAGS) -fplugin=./plugin.so -c -x c++ /dev/null -o /dev/null
+verify: instrument_attribute.so
+	$(CXX) $(CXXFLAGS) -fplugin=./instrument_attribute.so -c -x c++ /dev/null -o /dev/null
 
-test: ${TEST_SOURCE_FILES} plugin
-	$(CXX) $(CXXFLAGS) -fplugin=./plugin.so -fplugin-arg-plugin-debug $(CXXFLAGS) -finstrument-functions -g $< -o $@
+test: ${TEST_SOURCE_FILES} instrument_attribute.so
+	$(CXX) $(CXXFLAGS) -fplugin=./instrument_attribute.so -fplugin-arg-instrument_attribute-debug $(CXXFLAGS) -finstrument-functions -g $< -o $@
 
 trace: test
 	chmod +x trace.sh

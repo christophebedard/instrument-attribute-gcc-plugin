@@ -6,6 +6,8 @@
 
 int plugin_is_GPL_compatible;
 
+bool is_debug = false;
+
 static struct plugin_info info = {
     "0.0.1",
     "This plugin provides the instrument_function attribute.",
@@ -50,11 +52,29 @@ void handle(void * event_data, void * data)
     }
 }
 
+void parse_plugin_args(struct plugin_name_args * plugin_info)
+{
+    int argc = plugin_info->argc;
+    struct plugin_argument * argv = plugin_info->argv;
+
+    for (int i = 0; i < argc; ++i)
+    {
+        // Check for debug argument, and enable debug mode if found
+        if (strncmp(argv[i].key, "debug", 5) == 0)
+        {
+            std::cout << "DEBUG MODE" << std::endl;
+            is_debug = true;
+        }
+    }
+}
+
 int plugin_init(
     struct plugin_name_args * plugin_info,
     struct plugin_gcc_version * version)
 {
     std::cout << "Plugin: instrument_function attribute" << std::endl;
+
+    parse_plugin_args(plugin_info);
 
     register_callback(
         plugin_info->base_name,

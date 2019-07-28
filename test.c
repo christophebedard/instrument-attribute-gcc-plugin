@@ -12,6 +12,10 @@ void not_instrumented_function()
 
 int main()
 {
-    std::cout << "Test." << std::endl;
+    std::cout << "an_instrumented_function()" << std::endl;
+    an_instrumented_function();
+
+    std::cout << "not_instrumented_function()" << std::endl;
+    not_instrumented_function();
     return 0;
 }

@@ -15,7 +15,7 @@ plugin.so: $(PLUGIN_SOURCE_FILES)
 clean:
 	rm -f plugin.so
 	rm -f test
-	rm -rf test-traces/
+	rm -rf test-trace/
 
 verify: plugin.so
 	$(CXX) $(CXXFLAGS) -fplugin=./plugin.so -c -x c++ /dev/null -o /dev/null
@@ -25,6 +25,6 @@ test: ${TEST_SOURCE_FILES} plugin
 
 trace: test
 	chmod +x trace.sh
-	rm -rf test-traces
-	mkdir -p test-traces
+	rm -rf test-trace/
+	mkdir -p test-trace/
 	./trace.sh

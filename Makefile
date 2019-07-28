@@ -19,7 +19,7 @@ verify: instrument_attribute.so
 	$(CXX) $(CXXFLAGS) -fplugin=./instrument_attribute.so -c -x c++ /dev/null -o /dev/null
 
 test: ${TEST_SOURCE_FILES} instrument_attribute.so
-	$(CXX) $(CXXFLAGS) -fplugin=./instrument_attribute.so -fplugin-arg-instrument_attribute-debug $(CXXFLAGS) -finstrument-functions -g $< -o $@
+	gcc -fplugin=./instrument_attribute.so -finstrument-functions -fplugin-arg-instrument_attribute-debug $< -o $@
 
 trace: test
 	chmod +x trace.sh

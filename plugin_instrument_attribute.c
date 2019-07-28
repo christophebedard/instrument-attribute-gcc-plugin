@@ -30,8 +30,11 @@ static void register_attributes(void * event_data, void * data)
 void handle(void * event_data, void * data)
 {
     tree fndecl = (tree) event_data;
+    // Make sure it's a function
     if (TREE_CODE(fndecl) == FUNCTION_DECL)
     {
+        // If the function has our attribute, enable instrumentation,
+        // otherwise explicitly disable it
         if (lookup_attribute("instrument_function", DECL_ATTRIBUTES(fndecl)) != NULL_TREE)
         {
             std::cout << "instrument_function: "

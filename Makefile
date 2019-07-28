@@ -23,4 +23,7 @@ test: ${TEST_SOURCE_FILES} plugin
 	$(CXX) $(CXXFLAGS) -fplugin=./plugin.so $(CXXFLAGS) $< -o $@
 
 test-trace: test
+	chmod +x trace.sh
+	rm -rf test-traces
+	mkdir -p test-traces
 	./trace.sh

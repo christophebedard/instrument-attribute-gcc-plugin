@@ -4,6 +4,7 @@ test
 
 # directories
 .vscode/
+test-traces/
 
 # Prerequisites
 *.d

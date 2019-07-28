@@ -20,26 +20,6 @@ tree handle_instrument_function_attribute(
     int flags,
     bool * no_add_attrs)
 {
-    tree decl = *node;
-
-    std::cout << "hande_instrument_function_attribute: " << std::endl
-        << "\tname   : " << get_name(decl) << std::endl
-        << "\taddr   : " << name << std::endl
-        << "\tsource : " << DECL_SOURCE_FILE(decl) << ":" << DECL_SOURCE_LINE(decl) << std::endl;
-
-    if (TREE_CODE(decl) != FUNCTION_DECL)
-    {
-        error_at(
-            DECL_SOURCE_LOCATION(decl),
-            "%qE attribute applies only to functions",
-            name);
-        *no_add_attrs = true;
-    }
-    else
-    {
-        DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT(decl) = 0;
-    }
-
     return NULL_TREE;
 }
 
@@ -59,6 +39,22 @@ static void register_attributes(void * event_data, void * data)
     register_attribute(&instrument_function_attr);
 }
 
+void handle_all_passes_start(void * event_data, void * data)
+{
+    tree fndecl = (tree) event_data;
+    if (TREE_CODE(fndecl) == FUNCTION_DECL)
+    {
+        if (lookup_attribute("instrument_function", DECL_ATTRIBUTES(fndecl)) != NULL_TREE)
+        {
+            DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT(fndecl) = 0;
+        }
+        else
+        {
+            DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT(fndecl) = 1;
+        }
+    }
+}
+
 int plugin_init(
     struct plugin_name_args * plugin_info,
     struct plugin_gcc_version * version)
@@ -70,6 +66,12 @@ int plugin_init(
         PLUGIN_INFO,
         NULL,
         &info);
+
+    register_callback(
+        plugin_info->base_name,
+        PLUGIN_PRE_GENERICIZE,
+        handle_all_passes_start,
+        NULL);
 
     register_callback(
         plugin_info->base_name,

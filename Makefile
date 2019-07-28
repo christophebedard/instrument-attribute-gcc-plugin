@@ -23,7 +23,7 @@ verify: plugin.so
 test: ${TEST_SOURCE_FILES} plugin
 	$(CXX) $(CXXFLAGS) -fplugin=./plugin.so $(CXXFLAGS) -finstrument-functions -g $< -o $@
 
-test-trace: test
+trace: test
 	chmod +x trace.sh
 	rm -rf test-traces
 	mkdir -p test-traces

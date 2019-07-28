@@ -21,3 +21,6 @@ verify: plugin.so
 
 test: ${TEST_SOURCE_FILES} plugin
 	$(CXX) $(CXXFLAGS) -fplugin=./plugin.so $(CXXFLAGS) $< -o $@
+
+test-trace: test
+	./trace.sh

@@ -9,7 +9,7 @@ lttng enable-event -c testchan -u lttng_ust_cyg_profile_fast:func_exit
 
 lttng start
 
-./test
+LD_PRELOAD=/usr/lib/x86_64-linux-gnu/liblttng-ust-cyg-profile-fast.so ./test
 
 lttng stop
 lttng destroy

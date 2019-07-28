@@ -13,16 +13,6 @@ static struct plugin_info info = {
     "This plugin provides the instrument_function attribute.",
 };
 
-tree handle_instrument_function_attribute(
-    tree * node,
-    tree name,
-    tree args,
-    int flags,
-    bool * no_add_attrs)
-{
-    return NULL_TREE;
-}
-
 static struct attribute_spec instrument_function_attr =
 {
     "instrument_function",
@@ -31,7 +21,7 @@ static struct attribute_spec instrument_function_attr =
     false,
     false,
     false,
-    &handle_instrument_function_attribute,
+    NULL,  // No need for a handling function
 };
 
 static void register_attributes(void * event_data, void * data)

@@ -2,9 +2,7 @@
 
 #include "gcc-plugin.h"
 #include "plugin-version.h"
-
 #include "tree.h"
-#include "diagnostic-core.h"
 
 int plugin_is_GPL_compatible;
 

@@ -41,5 +41,6 @@ $ gcc -fplugin=./instrument_attribute.so -finstrument-functions test.c -o test
 You can use the `-fplugin-arg-instrument_attribute-debug` flag to enable debugging. It will print the functions for which instrumentation is enabled.
 
 ```shell
-$ gcc -fplugin=./instrument_attribute.so -finstrument-functions -fplugin-arg-instrument_attribute-debug test.c -o test
+$ gcc -fplugin=./instrument_attribute.so -finstrument-functions \
+  -fplugin-arg-instrument_attribute-debug test.c -o test
 ```

@@ -73,7 +73,7 @@ int plugin_init(
 
     register_callback(
         plugin_info->base_name,
-        PLUGIN_PRE_GENERICIZE,
+        PLUGIN_FINISH_PARSE_FUNCTION,
         handle,
         NULL);
 

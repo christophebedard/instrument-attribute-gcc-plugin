@@ -39,7 +39,7 @@ static void register_attributes(void * event_data, void * data)
     register_attribute(&instrument_function_attr);
 }
 
-void handle_all_passes_start(void * event_data, void * data)
+void handle(void * event_data, void * data)
 {
     tree fndecl = (tree) event_data;
     if (TREE_CODE(fndecl) == FUNCTION_DECL)
@@ -74,7 +74,7 @@ int plugin_init(
     register_callback(
         plugin_info->base_name,
         PLUGIN_PRE_GENERICIZE,
-        handle_all_passes_start,
+        handle,
         NULL);
 
     register_callback(

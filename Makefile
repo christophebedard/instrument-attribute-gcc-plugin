@@ -14,7 +14,7 @@ plugin: plugin.so
 
 clean:
 	rm -f plugin.so
-	rm -f verify
+	rm -f test
 
 verify: plugin.so
 	$(CXX) $(CXXFLAGS) -fplugin=./plugin.so -c -x c++ /dev/null -o /dev/null

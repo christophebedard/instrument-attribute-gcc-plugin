@@ -21,7 +21,7 @@ verify: plugin.so
 	$(CXX) $(CXXFLAGS) -fplugin=./plugin.so -c -x c++ /dev/null -o /dev/null
 
 test: ${TEST_SOURCE_FILES} plugin
-	$(CXX) $(CXXFLAGS) -fplugin=./plugin.so $(CXXFLAGS) -finstrument-functions -g $< -o $@
+	$(CXX) $(CXXFLAGS) -fplugin=./plugin.so -fplugin-arg-plugin-debug $(CXXFLAGS) -finstrument-functions -g $< -o $@
 
 trace: test
 	chmod +x trace.sh

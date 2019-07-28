@@ -4,6 +4,7 @@
 #include "plugin-version.h"
 
 #include "tree.h"
+#include "diagnostic-core.h"
 
 int plugin_is_GPL_compatible;
 
@@ -19,9 +20,26 @@ tree handle_instrument_function_attribute(
     int flags,
     bool * no_add_attrs)
 {
-    std::cout << "hande_instrument_function_attribute: "
-        << "name=" << name
-        << std::endl;
+    tree decl = *node;
+
+    std::cout << "hande_instrument_function_attribute: " << std::endl
+        << "\tname   : " << get_name(decl) << std::endl
+        << "\taddr   : " << name << std::endl
+        << "\tsource : " << DECL_SOURCE_FILE(decl) << ":" << DECL_SOURCE_LINE(decl) << std::endl;
+
+    if (TREE_CODE(decl) != FUNCTION_DECL)
+    {
+        error_at(
+            DECL_SOURCE_LOCATION(decl),
+            "%qE attribute applies only to functions",
+            name);
+        *no_add_attrs = true;
+    }
+    else
+    {
+        DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT(decl) = 0;
+    }
+
     return NULL_TREE;
 }
 

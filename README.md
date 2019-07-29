@@ -10,7 +10,7 @@ This plugin allows you to instrument individual functions with the `instrument_f
 
 For example, you might want to use this when you want to instrument only select functions and avoid instrumenting the standard library, since it adds a measurable overhead.
 
-## Build
+## Build the plugin
 
 This has been tested with `gcc` 7.4.0, but it probably works with other versions as well.
 

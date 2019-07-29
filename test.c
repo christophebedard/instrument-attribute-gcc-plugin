@@ -7,7 +7,7 @@ void __attribute__((instrument_function)) instrumented_function()
 
 void NOT_instrumented_function()
 {
-    printf("this is not instrumented");
+    printf("this is NOT instrumented");
 }
 
 int __attribute__((instrument_function)) main()

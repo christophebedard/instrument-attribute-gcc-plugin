@@ -12,7 +12,7 @@ For example, you might want to use this when you want to instrument only select 
 
 ## Build
 
-This assumes `gcc` 7.4.0, but it probably works with other versions as well.
+This has been tested with `gcc` 7.4.0, but it probably works with other versions as well.
 
 Download plugin headers.
 

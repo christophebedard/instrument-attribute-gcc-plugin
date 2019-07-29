@@ -30,7 +30,30 @@ $ make
 
 To use this plugin when building your own application with `gcc`, simply set the path to the plugin with `-fplugin=path/to/plugin.so`. Of course, you also need `-finstrument-functions`.
 
-For example, to build [`test.c`](./test.c):
+Add the `instrument_function` attribute to the function(s) you want to instrument. For example, to instrument `main()` and `instrumented_function()`, but not `NOT_instrumented_function()`:
+
+```c
+#include <stdio.h>
+
+void __attribute__((instrument_function)) instrumented_function()
+{
+    printf("this is instrumented\n");
+}
+
+void NOT_instrumented_function()
+{
+    printf("this is NOT instrumented");
+}
+
+int __attribute__((instrument_function)) main()
+{
+    instrumented_function();
+    NOT_instrumented_function();
+    return 0;
+}
+```
+
+Then build, assuming the file above is named [`test.c`](./test.c):
 
 ```shell
 $ gcc -fplugin=./instrument_attribute.so -finstrument-functions test.c -o test

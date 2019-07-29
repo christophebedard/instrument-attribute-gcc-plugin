@@ -2,7 +2,7 @@
 
 `gcc` plugin providing an `instrument_function` attribute to whitelist functions to be instrumented.
 
-# What it does
+## What it does
 
 When enabling function instrumentation (`-finstrument-functions`), the built-in flags (`-finstrument-functions-exclude-file-list=file,file,…`, `-finstrument-functions-exclude-function-list=sym,sym,…`) and attribute (`no_instrument_function`) only allow you to *exclude* functions from being instrumented.
 

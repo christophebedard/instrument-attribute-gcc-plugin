@@ -26,7 +26,7 @@ Then build.
 $ make
 ```
 
-## Using the plugin
+## Example
 
 To use this plugin when building your own application with `gcc`, simply set the path to the plugin with `-fplugin=path/to/plugin.so`. Of course, you also need `-finstrument-functions`.
 

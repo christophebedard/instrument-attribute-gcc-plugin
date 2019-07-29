@@ -66,4 +66,8 @@ You can use the `-fplugin-arg-instrument_attribute-debug` flag to enable debuggi
 ```shell
 $ gcc -fplugin=./instrument_attribute.so -finstrument-functions \
   -fplugin-arg-instrument_attribute-debug test.c -o test
+
+Plugin: instrument_function attribute
+instrument_function: (test.c:3) instrumented_function
+instrument_function: (test.c:13) main
 ```

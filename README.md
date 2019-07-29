@@ -28,7 +28,7 @@ $ make
 
 ## Example
 
-To use this plugin when building your own application with `gcc`, simply set the path to the plugin with `-fplugin=path/to/plugin.so`. Of course, you also need `-finstrument-functions`.
+To use this plugin when building your own application with `gcc`, simply enable `-finstrument-functions` and set the path to the plugin with `-fplugin=path/to/instrument_attribute.so`.
 
 Add the `instrument_function` attribute to the function(s) you want to instrument. For example, to instrument `main()` and `instrumented_function()`, but not `NOT_instrumented_function()`:
 

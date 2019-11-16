@@ -28,11 +28,9 @@ $ cd instrument-attribute-gcc-plugin/
 $ make
 ```
 
-## Example
+## Use the plugin
 
-To use this plugin when building your own application with `gcc`, simply enable `-finstrument-functions` and set the path to the plugin with `-fplugin=path/to/instrument_attribute.so`.
-
-Add the `instrument_function` attribute to the function(s) you want to instrument. For example, to instrument `main()` and `instrumented_function()`, but not `NOT_instrumented_function()`:
+To use this plugin when building your own application with `gcc`, add the `instrument_function` attribute to the function(s) you want to instrument. For example, to instrument `main()` and `instrumented_function()`, but not `NOT_instrumented_function()`:
 
 ```c
 #include <stdio.h>
@@ -55,7 +53,7 @@ int __attribute__((instrument_function)) main()
 }
 ```
 
-Then build, assuming the file above is named [`test.c`](./test.c):
+Then, to build, simply enable `-finstrument-functions` and set the path to the plugin with `-fplugin=path/to/instrument_attribute.so`. Assuming the file above is named [`test.c`](./test.c):
 
 ```shell
 $ gcc -fplugin=./instrument_attribute.so -finstrument-functions test.c -o test

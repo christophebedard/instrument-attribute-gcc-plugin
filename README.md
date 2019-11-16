@@ -37,19 +37,19 @@ To use this plugin when building your own application with `gcc`, add the `instr
 
 void __attribute__((instrument_function)) instrumented_function()
 {
-    printf("this is instrumented\n");
+  printf("this is instrumented\n");
 }
 
 void NOT_instrumented_function()
 {
-    printf("this is NOT instrumented");
+  printf("this is NOT instrumented");
 }
 
 int __attribute__((instrument_function)) main()
 {
-    instrumented_function();
-    NOT_instrumented_function();
-    return 0;
+  instrumented_function();
+  NOT_instrumented_function();
+  return 0;
 }
 ```
 

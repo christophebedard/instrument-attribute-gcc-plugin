@@ -20,9 +20,11 @@ Download plugin headers.
 $ sudo apt-get install gcc-7-plugin-dev
 ```
 
-Then build.
+Then clone and build.
 
 ```shell
+$ git clone https://github.com/christophebedard/instrument-attribute-gcc-plugin.git
+$ cd instrument-attribute-gcc-plugin/
 $ make
 ```
 

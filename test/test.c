@@ -21,6 +21,6 @@ int __attribute__((instrument_function)) main()
   instrumented_function();
   NOT_instrumented_function();
   instrumented_with_function_list();
-  other_function_instrumented_with_file_list();
+  instrumented_with_file_list();
   return 0;
 }

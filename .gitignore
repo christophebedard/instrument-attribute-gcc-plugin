@@ -1,6 +1,6 @@
 # executables
 verify
-test
+test/test
 
 # directories
 .vscode/

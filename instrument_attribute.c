@@ -13,6 +13,12 @@ bool is_debug = false;
     printf(__VA_ARGS__); \
   }
 
+bool is_verbose = false;
+#define VERBOSE(...) \
+  if (is_verbose) { \
+    printf(__VA_ARGS__); \
+  }
+
 char * include_file_list = NULL;
 char * include_function_list = NULL;
 
@@ -56,7 +62,7 @@ bool should_instrument_function(tree fndecl)
     {
       if (strstr(function_file, list_element) != NULL)
       {
-        DEBUG("\tfunction (%s) instrumented from file list: %s\n", get_name(fndecl), list_element);
+        VERBOSE("\tfunction (%s) instrumented from file list: %s\n", get_name(fndecl), list_element);
         return true;
       }
     }
@@ -74,7 +80,7 @@ bool should_instrument_function(tree fndecl)
     {
       if (strstr(function_name, list_element) != NULL)
       {
-        DEBUG("\tfunction (%s) instrumented from function name list: %s\n", function_name, list_element);
+        VERBOSE("\tfunction (%s) instrumented from function name list: %s\n", function_name, list_element);
         return true;
       }
     }
@@ -113,7 +119,7 @@ void parse_plugin_args(struct plugin_name_args * plugin_info)
   int argc = plugin_info->argc;
   struct plugin_argument * argv = plugin_info->argv;
 
-  DEBUG("Parameters:\n");
+  VERBOSE("Parameters:\n");
   for (int i = 0; i < argc; ++i)
   {
     // Check for debug argument, and enable debug mode if found
@@ -125,13 +131,13 @@ void parse_plugin_args(struct plugin_name_args * plugin_info)
     else if (strncmp(argv[i].key, "include-file-list", 17) == 0)
     {
       include_file_list = argv[i].value;
-      DEBUG("\t%s: %s\n", argv[i].key, include_file_list);
+      VERBOSE("\t%s: %s\n", argv[i].key, include_file_list);
     }
     // Check for function list
     else if (strncmp(argv[i].key, "include-function-list", 21) == 0)
     {
       include_function_list = argv[i].value;
-      DEBUG("\t%s: %s\n", argv[i].key, include_function_list);
+      VERBOSE("\t%s: %s\n", argv[i].key, include_function_list);
     }
   }
 }
@@ -141,7 +147,7 @@ void check_verbose()
   char * verbose_value = secure_getenv("VERBOSE");
   if (verbose_value != NULL && strncmp(verbose_value, "1", 1) == 0)
   {
-    is_debug = true;
+    is_verbose = true;
   }
 }
 

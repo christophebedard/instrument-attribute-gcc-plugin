@@ -72,10 +72,20 @@ void parse_plugin_args(struct plugin_name_args * plugin_info)
   }
 }
 
+void check_verbose()
+{
+  char * verbose_value = secure_getenv("VERBOSE");
+  if (verbose_value != NULL && strncmp(verbose_value, "1", 1) == 0)
+  {
+    is_debug = true;
+  }
+}
+
 int plugin_init(
   struct plugin_name_args * plugin_info,
   struct plugin_gcc_version * version)
 {
+  check_verbose();
   parse_plugin_args(plugin_info);
 
   DEBUG("Plugin: instrument_function attribute\n");

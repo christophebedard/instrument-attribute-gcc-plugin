@@ -12,7 +12,7 @@ This plugin allows you to instrument individual functions by:
 * giving a list of file paths (`-fplugin-arg-instrument_attribute-include-file-list=file,file,…`)
 * giving a list of function names (`-fplugin-arg-instrument_attribute-include-function-list=sym,sym,…`)
 
-For example, you might want to use this when you want to instrument only select functions and avoid instrumenting the standard library, since it adds a measurable overhead.
+For example, you might want to use this when you want to instrument only select functions and avoid instrumenting _everything_, since it adds a measurable overhead.
 
 ## Build the plugin
 

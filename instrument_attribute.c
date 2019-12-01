@@ -7,28 +7,31 @@
 
 int plugin_is_GPL_compatible;
 
-bool is_debug = false;
+#define ATTRIBUTE_NAME "instrument_function"
+#define LIST_DELIMITER ","
 #define DEBUG(...) \
   if (is_debug) { \
     printf(__VA_ARGS__); \
   }
-
-bool is_verbose = false;
 #define VERBOSE(...) \
   if (is_verbose) { \
     printf(__VA_ARGS__); \
   }
+
+bool is_debug = false;
+bool is_verbose = false;
 
 char * include_file_list = NULL;
 char * include_function_list = NULL;
 
 static struct plugin_info info = {
   "0.0.1",
-  "This plugin provides the instrument_function attribute.",
+  "This plugin provides the instrument_function attribute and"
+    " other flags to enable instrumentation through white-listing.",
 };
 
 static struct attribute_spec instrument_function_attr = {
-  "instrument_function",
+  ATTRIBUTE_NAME,
   0,
   -1,
   false,
@@ -45,7 +48,7 @@ static void register_attributes(void * event_data, void * data)
 bool should_instrument_function(tree fndecl)
 {
   // If the function has our attribute, enable instrumentation
-  if (lookup_attribute("instrument_function", DECL_ATTRIBUTES(fndecl)) != NULL_TREE)
+  if (lookup_attribute(ATTRIBUTE_NAME, DECL_ATTRIBUTES(fndecl)) != NULL_TREE)
   {
     return true;
   }
@@ -58,7 +61,7 @@ bool should_instrument_function(tree fndecl)
     // Chekc if an element in the list is a substring of the function's file's path 
     char * list_element;
     char * rest = include_file_list;
-    while (list_element = strtok_r(rest, ",", &rest))
+    while (list_element = strtok_r(rest, LIST_DELIMITER, &rest))
     {
       if (strstr(function_file, list_element) != NULL)
       {
@@ -76,7 +79,7 @@ bool should_instrument_function(tree fndecl)
     // Check if the function name is in the list
     char * list_element;
     char * rest = include_function_list;
-    while (list_element = strtok_r(rest, ",", &rest))
+    while (list_element = strtok_r(rest, LIST_DELIMITER, &rest))
     {
       if (strstr(function_name, list_element) != NULL)
       {

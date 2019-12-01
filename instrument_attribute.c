@@ -147,6 +147,7 @@ void check_verbose()
   char * verbose_value = secure_getenv("VERBOSE");
   if (verbose_value != NULL && strncmp(verbose_value, "1", 1) == 0)
   {
+    is_debug = true;
     is_verbose = true;
   }
 }

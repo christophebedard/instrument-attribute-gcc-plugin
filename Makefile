@@ -20,7 +20,6 @@ verify: instrument_attribute.so
 
 test: ${TEST_SOURCE_FILES} instrument_attribute.so
 	VERBOSE=1 $(TARGET_GCC) -fplugin=./instrument_attribute.so -finstrument-functions \
-		-fplugin-arg-instrument_attribute-debug \
 		-fplugin-arg-instrument_attribute-include-file-list=/something/else,test/other \
 		-fplugin-arg-instrument_attribute-include-function-list=instrumented_with_function_list,random_other_function_name \
 		$< -o test/$@

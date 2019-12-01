@@ -1,12 +1,16 @@
 # instrument-attribute-gcc-plugin
 
-`gcc` plugin providing an `instrument_function` attribute to whitelist functions to be instrumented.
+`gcc` plugin providing an `instrument_function` attribute and other `gcc` flags to whitelist functions to be instrumented.
 
 ## What it does
 
 When enabling function instrumentation (`-finstrument-functions`), the built-in flags (`-finstrument-functions-exclude-file-list=file,file,…`, `-finstrument-functions-exclude-function-list=sym,sym,…`) and attribute (`no_instrument_function`) only allow you to *exclude* functions from being instrumented.
 
-This plugin allows you to instrument individual functions with the `instrument_function` attribute.
+This plugin allows you to instrument individual functions by:
+
+* adding the `instrument_function` attribute to a function
+* giving a list of file paths (`-fplugin-arg-instrument_attribute-include-file-list=file,file,…`)
+* giving a list of function names (`-fplugin-arg-instrument_attribute-include-function-list=sym,sym,…`)
 
 For example, you might want to use this when you want to instrument only select functions and avoid instrumenting the standard library, since it adds a measurable overhead.
 

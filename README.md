@@ -6,7 +6,7 @@
 
 When enabling function instrumentation (`-finstrument-functions`), the built-in flags (`-finstrument-functions-exclude-file-list=file,file,…`, `-finstrument-functions-exclude-function-list=sym,sym,…`) and attribute (`no_instrument_function`) only allow you to *exclude* functions from being instrumented.
 
-This plugin allows you to instrument individual functions by:
+This plugin allows you to instrument individual functions, by:
 
 * adding the `instrument_function` attribute to a function
 * giving a list of file paths (`-fplugin-arg-instrument_attribute-include-file-list=file,file,…`)

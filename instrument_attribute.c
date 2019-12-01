@@ -62,7 +62,7 @@ bool should_instrument_function(tree fndecl)
     {
       if (strstr(function_file, list_element) != NULL)
       {
-        VERBOSE("\tfunction (%s) instrumented from file list: %s\n", get_name(fndecl), list_element);
+        VERBOSE("\tfunction instrumented from file list: %s (%s)\n", list_element, get_name(fndecl));
         return true;
       }
     }
@@ -80,7 +80,7 @@ bool should_instrument_function(tree fndecl)
     {
       if (strstr(function_name, list_element) != NULL)
       {
-        VERBOSE("\tfunction (%s) instrumented from function name list: %s\n", function_name, list_element);
+        VERBOSE("\tfunction instrumented from function name list: %s\n", list_element);
         return true;
       }
     }

@@ -10,13 +10,17 @@ int plugin_is_GPL_compatible;
 #define ATTRIBUTE_NAME "instrument_function"
 #define LIST_DELIMITER ","
 #define DEBUG(...) \
-  if (is_debug) { \
-    printf(__VA_ARGS__); \
-  }
+  do { \
+    if (is_debug) { \
+      printf(__VA_ARGS__); \
+    } \
+  } while (0)
 #define VERBOSE(...) \
-  if (is_verbose) { \
-    printf(__VA_ARGS__); \
-  }
+  do { \
+    if (is_verbose) { \
+      printf(__VA_ARGS__); \
+    } \
+  } while (0)
 
 bool is_debug = false;
 bool is_verbose = false;

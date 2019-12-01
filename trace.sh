@@ -14,7 +14,7 @@ lttng add-context -u -t vpid -t vtid -t procname -t ip
 
 lttng start
 
-LD_PRELOAD=/usr/lib/x86_64-linux-gnu/liblttng-ust-cyg-profile-fast.so ./test
+LD_PRELOAD=/usr/lib/x86_64-linux-gnu/liblttng-ust-cyg-profile-fast.so ./test/test
 
 lttng stop
 lttng destroy

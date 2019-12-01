@@ -18,3 +18,5 @@ LD_PRELOAD=/usr/lib/x86_64-linux-gnu/liblttng-ust-cyg-profile-fast.so ./test/tes
 
 lttng stop
 lttng destroy
+
+babeltrace test-trace/ | grep ":func_.*:"

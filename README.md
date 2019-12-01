@@ -53,11 +53,23 @@ int __attribute__((instrument_function)) main()
 }
 ```
 
-Then, to build, simply enable `-finstrument-functions` and set the path to the plugin with `-fplugin=path/to/instrument_attribute.so`. Assuming the file above is named [`test.c`](./test.c):
+Then, to build, simply enable `-finstrument-functions` and set the path to the plugin with `-fplugin=path/to/instrument_attribute.so`. Assuming the file above is named `test.c`:
 
 ```shell
 $ gcc -fplugin=./instrument_attribute.so -finstrument-functions test.c -o test
 ```
+
+Similar to `gcc`'s [built-in flags](https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html), you can also instrument functions by giving a list of file paths and/or by giving a list of names.
+
+```
+-fplugin-arg-instrument_attribute-include-file-list=file,file,…
+```
+
+```
+-fplugin-arg-instrument_attribute-include-function-list=sym,sym,…
+```
+
+These matches are done on substrings. If the given `file` value is a substring of a file's path, its functions will be instrumented; if the given `sym` value is a substring of a function's user-visible name, it will be instrumented. 
 
 ## Debugging
 
@@ -65,9 +77,29 @@ You can use the `-fplugin-arg-instrument_attribute-debug` flag to enable debuggi
 
 ```shell
 $ gcc -fplugin=./instrument_attribute.so -finstrument-functions \
-  -fplugin-arg-instrument_attribute-debug test.c -o test
+  -fplugin-arg-instrument_attribute-debug test/test.c -o test/test
 
 Plugin: instrument_function attribute
-instrument_function: (test.c:3) instrumented_function
-instrument_function: (test.c:13) main
+instrumented function: (test/test.c:4) instrumented_function
+instrumented function: (test/test.c:19) main
+```
+
+You can also use the `VERBOSE` environment variable to get even more information and figure out how functions were instrumented.
+
+```shell
+$ VERBOSE=1 gcc -fplugin=./instrument_attribute.so -finstrument-functions \
+  -fplugin-arg-instrument_attribute-include-file-list=test/other \
+  -fplugin-arg-instrument_attribute-include-function-list=instrumented_with_function_list \
+  test/test.c -o test/test
+
+Parameters:
+        include-file-list: test/other
+        include-function-list: instrumented_with_function_list
+Plugin: instrument_function attribute
+        function instrumented from file list: test/other (instrumented_with_file_list)
+instrumented function: (test/other/other_file.h:3) instrumented_with_file_list
+instrumented function: (test/test.c:4) instrumented_function
+        function instrumented from function name list: instrumented_with_function_list
+instrumented function: (test/test.c:14) instrumented_with_function_list
+instrumented function: (test/test.c:19) main
 ```

@@ -107,3 +107,59 @@ instrumented function: (test/test.c:4) instrumented_function
 instrumented function: (test/test.c:14) instrumented_with_function_list
 instrumented function: (test/test.c:19) main
 ```
+
+## Tracing example with LTTng
+
+[Install LTTng and babeltrace](https://lttng.org/docs/v2.10/#doc-installing-lttng) (this only requires userspace tracing).
+
+```shell
+$ sudo apt-get install lttng-tools liblttng-ust-dev
+```
+
+Start a session daemon if it's not already running.
+
+```shell
+$ lttng-sessiond --daemon
+```
+
+Build the plugin, then build your application using the plugin ([see above](#use-the-plugin)).
+
+Then, create an LTTng session.
+
+```shell
+$ lttng create test --output=./my-test-trace/
+```
+
+Enable the `func_entry`/`func_exit` events.
+
+```shell
+$ lttng enable-event -c testchan -u lttng_ust_cyg_profile_fast:func_entry
+$ lttng enable-event -c testchan -u lttng_ust_cyg_profile_fast:func_exit
+```
+
+Start tracing.
+
+```shell
+$ lttng start
+```
+
+Run your application, making sure to preload the profiling library (note: the path to the shared library might be different on your system).
+
+```shell
+$ LD_PRELOAD=/usr/lib/x86_64-linux-gnu/liblttng-ust-cyg-profile-fast.so ./your/application
+```
+
+Stop tracing.
+
+```shell
+$ lttng stop
+$ lttng destroy
+```
+
+Use babeltrace to view the output.
+
+```shell
+$ babeltrace my-test-trace/
+```
+
+Process the trace data however you want.

@@ -162,4 +162,4 @@ Use babeltrace to view the output.
 $ babeltrace my-test-trace/
 ```
 
-Process the trace data however you want.
+Process the trace data however you want (suggestion: [Trace Compass](https://www.eclipse.org/tracecompass/)).

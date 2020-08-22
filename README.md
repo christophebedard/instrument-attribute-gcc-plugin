@@ -16,9 +16,9 @@ For example, you might want to use this when you want to instrument only select 
 
 ## Build the plugin
 
-This has been tested with `gcc` 7.4.0, but it probably works with other versions as well.
+This has been tested with `gcc` 7.4.0 and 9.3.0, but it probably works with other versions as well.
 
-Download plugin headers.
+Download plugin headers. The exact package name depends on the `gcc` major version (e.g. `gcc-7-plugin-dev` for 7.4.0).
 
 ```shell
 $ sudo apt-get install gcc-7-plugin-dev

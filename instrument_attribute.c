@@ -1,9 +1,12 @@
 #include <stdio.h>
 
 #include "gcc-plugin.h"
-#include "plugin-version.h"
-#include "tree.h"
+
 #include "langhooks.h"
+#include "plugin-version.h"
+#include "stringpool.h"
+#include "tree.h"
+#include "attribs.h"
 
 int plugin_is_GPL_compatible;
 

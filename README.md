@@ -14,6 +14,9 @@ This plugin allows you to instrument individual functions, by:
 
 For example, you might want to use this when you want to instrument only select functions and avoid instrumenting _everything_, since it adds a measurable overhead.
 
+Of course, you will have to keep in mind that not all functions were instrumented when interpreting the data.
+For example, the self-time of a function may be misleading if only a portion of the functions it calls are instrumented.
+
 ## Build the plugin
 
 This has been tested with `gcc` 7.4.0 and 9.3.0, but it probably works with other versions as well.

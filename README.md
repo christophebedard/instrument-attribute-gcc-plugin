@@ -21,7 +21,8 @@ For example, the self-time of a function may be misleading if only a portion of 
 
 This has been tested with `gcc` 7.4.0 and 9.3.0, but it probably works with other versions as well.
 
-Download plugin headers. The exact package name depends on the `gcc` major version (e.g. `gcc-7-plugin-dev` for 7.4.0).
+Download plugin headers.
+The exact package name depends on the `gcc` major version (e.g. `gcc-7-plugin-dev` for 7.4.0).
 
 ```shell
 $ sudo apt-get install gcc-7-plugin-dev
@@ -37,7 +38,8 @@ $ make
 
 ## Use the plugin
 
-To use this plugin when building your own application with `gcc`, add the `instrument_function` attribute to the function(s) you want to instrument. For example, to instrument `main()` and `instrumented_function()`, but not `NOT_instrumented_function()`:
+To use this plugin when building your own application with `gcc`, add the `instrument_function` attribute to the function(s) you want to instrument.
+For example, to instrument `main()` and `instrumented_function()`, but not `NOT_instrumented_function()`:
 
 ```c
 #include <stdio.h>
@@ -60,7 +62,8 @@ int __attribute__((instrument_function)) main()
 }
 ```
 
-Then, to build, simply enable `-finstrument-functions` and set the path to the plugin with `-fplugin=path/to/instrument_attribute.so`. Assuming the file above is named `test.c`:
+Then, to build, simply enable `-finstrument-functions` and set the path to the plugin with `-fplugin=path/to/instrument_attribute.so`.
+Assuming the file above is named `test.c`:
 
 ```shell
 $ gcc -fplugin=./instrument_attribute.so -finstrument-functions test.c -o test
@@ -76,11 +79,13 @@ Similar to `gcc`'s [built-in flags](https://gcc.gnu.org/onlinedocs/gcc/Instrumen
 -fplugin-arg-instrument_attribute-include-function-list=sym,sym,…
 ```
 
-These matches are done on substrings. If the given `file` value is a substring of a file's path, its functions will be instrumented; if the given `sym` value is a substring of a function's user-visible name, it will be instrumented. 
+These matches are done on substrings.
+If the given `file` value is a substring of a file's path, its functions will be instrumented; if the given `sym` value is a substring of a function's user-visible name, it will be instrumented.
 
 ## Debugging
 
-You can use the `-fplugin-arg-instrument_attribute-debug` flag to enable debugging. It will print the functions for which instrumentation is enabled.
+You can use the `-fplugin-arg-instrument_attribute-debug` flag to enable debugging.
+It will print the functions for which instrumentation is enabled.
 
 ```shell
 $ gcc -fplugin=./instrument_attribute.so -finstrument-functions \

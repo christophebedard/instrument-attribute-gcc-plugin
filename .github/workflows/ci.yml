@@ -8,27 +8,20 @@ on:
     # Schedule twice a month, on the 1st and the 15th
     - cron: '0 0 1,15 * *'
 jobs:
-  gcc-7:
-    runs-on: ubuntu-18.04
+  gcc:
+    strategy:
+      matrix:
+        include:
+          - ubuntu: ubuntu-18.04
+            gcc: 7
+          - ubuntu: ubuntu-20.04
+            gcc: 9
+    runs-on: ${{ matrix.ubuntu }}
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: |
-        sudo apt-get update && sudo apt-get install -q -y build-essential gcc-7-plugin-dev
-    - name: Build
-      run: |
-        make
-    - name: Test
-      run: |
-        make verify
-        make test
-  gcc-9:
-    runs-on: ubuntu-20.04
-    steps:
-    - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: |
-        sudo apt-get update && sudo apt-get install -q -y build-essential gcc-9-plugin-dev
+        sudo apt-get update && sudo apt-get install -q -y build-essential gcc-${{ matrix.gcc }}-plugin-dev
     - name: Build
       run: |
         make

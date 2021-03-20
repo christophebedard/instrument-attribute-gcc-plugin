@@ -171,3 +171,7 @@ $ babeltrace my-test-trace/
 ```
 
 Process the trace data however you want (suggestion: [Trace Compass](https://www.eclipse.org/tracecompass/)).
+
+## Contributing
+
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md).

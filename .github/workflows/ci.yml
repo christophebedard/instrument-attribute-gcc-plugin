@@ -13,15 +13,15 @@ jobs:
       matrix:
         include:
           - ubuntu: ubuntu-18.04
-            gcc: 7
+            gcc: gcc-7
           - ubuntu: ubuntu-20.04
-            gcc: 9
+            gcc: gcc-9
     runs-on: ${{ matrix.ubuntu }}
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: |
-        sudo apt-get update && sudo apt-get install -q -y build-essential gcc-${{ matrix.gcc }}-plugin-dev
+        sudo apt-get update && sudo apt-get install -q -y build-essential ${{ matrix.gcc }}-plugin-dev
     - name: Build
       run: |
         make

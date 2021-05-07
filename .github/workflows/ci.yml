@@ -16,6 +16,8 @@ jobs:
             gcc: gcc-7
           - ubuntu: ubuntu-20.04
             gcc: gcc-9
+          - ubuntu: ubuntu-20.04
+            gcc: gcc-10
     runs-on: ${{ matrix.ubuntu }}
     steps:
     - uses: actions/checkout@v2

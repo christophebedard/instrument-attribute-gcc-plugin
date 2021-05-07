@@ -1,6 +1,6 @@
 # instrument-attribute-gcc-plugin
 
-`gcc` plugin providing an `instrument_function` attribute and other `gcc` flags to whitelist functions to be instrumented.
+`gcc` plugin providing an `instrument_function` attribute and other `gcc` flags to specify which functions should be instrumented.
 
 ## What it does
 

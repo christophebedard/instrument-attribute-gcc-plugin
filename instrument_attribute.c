@@ -49,7 +49,7 @@ char * include_function_list = NULL;
 static struct plugin_info info = {
   "0.0.1",
   "This plugin provides the instrument_function attribute and"
-    " other flags to enable instrumentation through white-listing.",
+    " other flags to enable instrumentation through allow-listing.",
 };
 
 static struct attribute_spec instrument_function_attr = {

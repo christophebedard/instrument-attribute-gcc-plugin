@@ -13,22 +13,26 @@ jobs:
       matrix:
         include:
           - ubuntu: ubuntu-18.04
-            gcc: gcc-7
+            gcc: 7
+            g++: 7
           - ubuntu: ubuntu-20.04
-            gcc: gcc-9
+            gcc: 9
+            g++: 9
           - ubuntu: ubuntu-20.04
-            gcc: gcc-10
+            gcc: 10
+            g++: 10
     runs-on: ${{ matrix.ubuntu }}
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: |
-        sudo apt-get update && sudo apt-get install -q -y ${{ matrix.gcc }} ${{ matrix.gcc }}-plugin-dev
-        gcc --version
+        sudo apt-get update && sudo apt-get install -q -y ${{ matrix.gcc }} ${{ matrix.g++ }} ${{ matrix.gcc }}-plugin-dev
+        ${{ matrix.gcc }} --version
+        ${{ matrix.g++ }} --version
     - name: Build
       run: |
-        make
+        make TARGET_GCC=${{ matrix.gcc }} CXX=${{ matrix.g++ }} 
     - name: Test
       run: |
-        make verify
-        make test
+        make TARGET_GCC=${{ matrix.gcc }} CXX=${{ matrix.g++ }} verify
+        make TARGET_GCC=${{ matrix.gcc }} CXX=${{ matrix.g++ }} test

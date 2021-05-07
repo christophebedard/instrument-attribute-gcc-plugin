@@ -23,7 +23,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: |
-        sudo apt-get update && sudo apt-get install -q -y build-essential ${{ matrix.gcc }}-plugin-dev
+        sudo apt-get update && sudo apt-get install -q -y ${{ matrix.gcc }} ${{ matrix.gcc }}-plugin-dev
         gcc --version
     - name: Build
       run: |

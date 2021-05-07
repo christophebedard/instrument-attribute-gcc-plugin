@@ -4,7 +4,7 @@
 
 ## What it does
 
-When enabling function instrumentation (`-finstrument-functions`), the built-in flags (`-finstrument-functions-exclude-file-list=file,file,…`, `-finstrument-functions-exclude-function-list=sym,sym,…`) and attribute (`no_instrument_function`) only allow you to *exclude* functions from being instrumented.
+When enabling function instrumentation (`-finstrument-functions`), the [built-in flags](https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html#Instrumentation-Options) (`-finstrument-functions-exclude-file-list=file,file,…`, `-finstrument-functions-exclude-function-list=sym,sym,…`) and [attribute](https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#Common-Function-Attributes) (`no_instrument_function`) only allow you to *exclude* functions from being instrumented.
 
 This plugin allows you to instrument individual functions, by:
 

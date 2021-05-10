@@ -1,7 +1,7 @@
 CXX=g++
 TARGET_GCC=gcc
 PLUGIN_NAME= instrument_attribute
-PLUGIN_SOURCE_FILES= $(PLUGIN_NAME).c
+PLUGIN_SOURCE_FILES= $(PLUGIN_NAME).cpp
 TEST_SOURCE_FILES= test/test.c test/other/other_file.h
 GCCPLUGINS_DIR:= $(shell $(TARGET_GCC) -print-file-name=plugin)
 CXXFLAGS+= -I$(GCCPLUGINS_DIR)/include -fPIC -O2

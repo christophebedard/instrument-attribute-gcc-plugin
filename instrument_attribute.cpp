@@ -114,6 +114,7 @@ bool should_instrument_function(tree fndecl)
   return false;
 }
 
+extern "C"
 void handle(void * event_data, void * data)
 {
   tree fndecl = (tree) event_data;
@@ -177,6 +178,7 @@ void check_verbose()
   }
 }
 
+extern "C"
 int plugin_init(
   struct plugin_name_args * plugin_info,
   struct plugin_gcc_version * version)

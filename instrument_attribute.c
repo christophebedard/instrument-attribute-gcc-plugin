@@ -44,6 +44,7 @@ const char * LIST_DELIMITER = ",";
 bool is_debug = false;
 bool is_verbose = false;
 
+/// Dynamic strings list.
 struct string_list {
   /// String array.
   char ** data;
@@ -77,6 +78,7 @@ static void register_attributes(void * event_data, void * data)
   register_attribute(&instrument_function_attr);
 }
 
+/// Custom strdup.
 char * strdup_(const char * str)
 {
   size_t len = strlen(str) + 1;
@@ -85,6 +87,7 @@ char * strdup_(const char * str)
   return dup_str;
 }
 
+/// Count the number of occurrences of the given character in the given string.
 size_t count_characters(const char * str, const char * character)
 {
   const char * p = str;
@@ -97,6 +100,7 @@ size_t count_characters(const char * str, const char * character)
   return count;
 }
 
+/// Split string into list using given separator.
 void split_str(char * str, const char * sep, struct string_list * list)
 {
   // Could be wrong, e.g. "a,,b"
@@ -127,6 +131,7 @@ void print_list(struct string_list * list)
   printf("\n");
 }
 
+/// Check if a string in the list is a substring of the given string.
 char * list_strstr(struct string_list * list, const char * str1)
 {
   for (size_t i = 0; i < list->len; i++) {

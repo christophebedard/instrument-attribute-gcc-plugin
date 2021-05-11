@@ -26,6 +26,9 @@
 int plugin_is_GPL_compatible;
 
 const char * LIST_DELIMITER = ",";
+const char * ARG_DEBUG = "debug";
+const char * ARG_INCLUDE_FILE_LIST = "include-file-list";
+const char * ARG_INCLUDE_FUNCTION_LIST = "include-function-list";
 
 #define ATTRIBUTE_NAME "instrument_function"
 #define DEBUG(...) \
@@ -110,7 +113,7 @@ void split_str(char * str, const char * sep, struct string_list * list)
   char * rest = NULL;
   char * token;
   size_t len = 0;
-  for (token = strtok_r(str, sep, &rest); token != NULL; token = strtok_r(NULL, sep, &rest)) {
+  for (token = strtok_r(str, sep, &rest); NULL != token; token = strtok_r(NULL, sep, &rest)) {
     // Only use it if it's not empty
     if (strlen(token) > 0) {
       list->data[len] = strdup_(token);
@@ -135,7 +138,7 @@ void print_list(struct string_list * list)
 char * list_strstr(struct string_list * list, const char * str1)
 {
   for (size_t i = 0; i < list->len; i++) {
-    if (strstr(str1, list->data[i]) != NULL) {
+    if (NULL != strstr(str1, list->data[i])) {
       return list->data[i];
     }
   }
@@ -145,7 +148,7 @@ char * list_strstr(struct string_list * list, const char * str1)
 bool should_instrument_function(tree fndecl)
 {
   // If the function has our attribute, enable instrumentation
-  if (lookup_attribute(ATTRIBUTE_NAME, DECL_ATTRIBUTES(fndecl)) != NULL_TREE) {
+  if (NULL_TREE != lookup_attribute(ATTRIBUTE_NAME, DECL_ATTRIBUTES(fndecl))) {
     VERBOSE("\tfunction instrumented from attribute: %s\n", get_name(fndecl));
     return true;
   }
@@ -214,11 +217,11 @@ void parse_plugin_args(struct plugin_name_args * plugin_info)
   VERBOSE("Parameters:\n");
   for (int i = 0; i < argc; ++i) {
     // Check for debug argument, and enable debug mode if found
-    if (strncmp(argv[i].key, "debug", 5) == 0) {
+    if (0 == strncmp(argv[i].key, ARG_DEBUG, strlen(ARG_DEBUG))) {
       is_debug = true;
     }
     // Check for file list
-    else if (strncmp(argv[i].key, "include-file-list", 17) == 0) {
+    else if (0 == strncmp(argv[i].key, ARG_INCLUDE_FILE_LIST, strlen(ARG_INCLUDE_FILE_LIST))) {
       char * include_file_list = argv[i].value;
       VERBOSE("\t%s: %s\n", argv[i].key, include_file_list);
       split_str(include_file_list, LIST_DELIMITER, &include_files);
@@ -227,7 +230,7 @@ void parse_plugin_args(struct plugin_name_args * plugin_info)
       }
     }
     // Check for function list
-    else if (strncmp(argv[i].key, "include-function-list", 21) == 0) {
+    else if (0 == strncmp(argv[i].key, ARG_INCLUDE_FUNCTION_LIST, strlen(ARG_INCLUDE_FUNCTION_LIST))) {
       char * include_function_list = argv[i].value;
       VERBOSE("\t%s: %s\n", argv[i].key, include_function_list);
       split_str(include_function_list, LIST_DELIMITER, &include_functions);

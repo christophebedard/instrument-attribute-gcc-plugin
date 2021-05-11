@@ -106,11 +106,9 @@ void split_str(char * str, const char * sep, struct string_list * list)
   char * rest = NULL;
   char * token;
   size_t len = 0;
-  for (token = strtok_r(str, sep, &rest); token != NULL; token = strtok_r(NULL, sep, &rest))
-  {
+  for (token = strtok_r(str, sep, &rest); token != NULL; token = strtok_r(NULL, sep, &rest)) {
     // Only use it if it's not empty
-    if (strlen(token) > 0)
-    {
+    if (strlen(token) > 0) {
       list->data[len] = strdup_(token);
       len++;
     }
@@ -123,8 +121,7 @@ void split_str(char * str, const char * sep, struct string_list * list)
 void print_list(struct string_list * list)
 {
   printf("\t\tlist of size %ld: ", list->len);
-  for (size_t i = 0; i < list->len; i++)
-  {
+  for (size_t i = 0; i < list->len; i++) {
     printf("%s, ", list->data[i]);
   }
   printf("\n");
@@ -132,10 +129,8 @@ void print_list(struct string_list * list)
 
 char * list_strstr(struct string_list * list, const char * str1)
 {
-  for (size_t i = 0; i < list->len; i++)
-  {
-    if (strstr(str1, list->data[i]) != NULL)
-    {
+  for (size_t i = 0; i < list->len; i++) {
+    if (strstr(str1, list->data[i]) != NULL) {
       return list->data[i];
     }
   }
@@ -145,37 +140,32 @@ char * list_strstr(struct string_list * list, const char * str1)
 bool should_instrument_function(tree fndecl)
 {
   // If the function has our attribute, enable instrumentation
-  if (lookup_attribute(ATTRIBUTE_NAME, DECL_ATTRIBUTES(fndecl)) != NULL_TREE)
-  {
+  if (lookup_attribute(ATTRIBUTE_NAME, DECL_ATTRIBUTES(fndecl)) != NULL_TREE) {
     VERBOSE("\tfunction instrumented from attribute: %s\n", get_name(fndecl));
     return true;
   }
 
   // If the function's file is in the include-file-list, enable instrumentation
-  if (include_files.len > 0)
-  {
+  if (include_files.len > 0) {
     const char * function_file = DECL_SOURCE_FILE(fndecl);
 
     // Check if an element in the list is a substring of the function's file's path
     DEBUG("\tchecking file: %s\n", function_file);
     char * result = list_strstr(&include_files, function_file);
-    if (NULL != result)
-    {
+    if (NULL != result) {
       VERBOSE("\t\tfunction instrumented from file list: %s (%s)\n", result, get_name(fndecl));
       return true;
     }
   }
 
   // If the function is in the include-function-list, enable instrumentation
-  if (include_functions.len > 0)
-  {
+  if (include_functions.len > 0) {
     const char * function_name = lang_hooks.decl_printable_name (fndecl, 1);
 
     // Check if the function name is in the list
     DEBUG("\tchecking function: %s\n", function_name);
     char * result = list_strstr(&include_functions, function_name);
-    if (NULL != result)
-    {
+    if (NULL != result) {
       VERBOSE("\t\tfunction instrumented from function name list: %s\n", result);
       return true;
     }
@@ -189,11 +179,9 @@ void handle(void * event_data, void * data)
   tree fndecl = (tree) event_data;
 
   // Make sure it's a function
-  if (TREE_CODE(fndecl) == FUNCTION_DECL)
-  {
+  if (TREE_CODE(fndecl) == FUNCTION_DECL) {
     // Check if the function should be instrumented
-    if (should_instrument_function(fndecl))
-    {
+    if (should_instrument_function(fndecl)) {
       DEBUG(
         "instrumented function: (%s:%d) %s\n",
         DECL_SOURCE_FILE(fndecl),
@@ -202,8 +190,7 @@ void handle(void * event_data, void * data)
       DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT(fndecl) = 0;
     }
     // Otherwise explicitly disable it
-    else
-    {
+    else {
       DEBUG(
         "NOT instrumented function: (%s:%d) %s\n",
         DECL_SOURCE_FILE(fndecl),
@@ -220,16 +207,13 @@ void parse_plugin_args(struct plugin_name_args * plugin_info)
   struct plugin_argument * argv = plugin_info->argv;
 
   VERBOSE("Parameters:\n");
-  for (int i = 0; i < argc; ++i)
-  {
+  for (int i = 0; i < argc; ++i) {
     // Check for debug argument, and enable debug mode if found
-    if (strncmp(argv[i].key, "debug", 5) == 0)
-    {
+    if (strncmp(argv[i].key, "debug", 5) == 0) {
       is_debug = true;
     }
     // Check for file list
-    else if (strncmp(argv[i].key, "include-file-list", 17) == 0)
-    {
+    else if (strncmp(argv[i].key, "include-file-list", 17) == 0) {
       char * include_file_list = argv[i].value;
       VERBOSE("\t%s: %s\n", argv[i].key, include_file_list);
       split_str(include_file_list, LIST_DELIMITER, &include_files);
@@ -238,8 +222,7 @@ void parse_plugin_args(struct plugin_name_args * plugin_info)
       }
     }
     // Check for function list
-    else if (strncmp(argv[i].key, "include-function-list", 21) == 0)
-    {
+    else if (strncmp(argv[i].key, "include-function-list", 21) == 0) {
       char * include_function_list = argv[i].value;
       VERBOSE("\t%s: %s\n", argv[i].key, include_function_list);
       split_str(include_function_list, LIST_DELIMITER, &include_functions);
@@ -253,8 +236,7 @@ void parse_plugin_args(struct plugin_name_args * plugin_info)
 void check_verbose()
 {
   char * verbose_value = secure_getenv("VERBOSE");
-  if (verbose_value != NULL && strncmp(verbose_value, "1", 1) == 0)
-  {
+  if (verbose_value != NULL && strncmp(verbose_value, "1", 1) == 0) {
     is_debug = true;
     is_verbose = true;
   }
@@ -262,8 +244,7 @@ void check_verbose()
 
 void free_list(struct string_list * list)
 {
-  for (size_t i = 0; i < list->data_len; i++)
-  {
+  for (size_t i = 0; i < list->data_len; i++) {
     free(list->data[i]);
   }
   free(list->data);

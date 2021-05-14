@@ -22,10 +22,10 @@ For example, the self-time of a function may be misleading if only a portion of 
 This has been tested with `gcc` 7.4.0, 7.5.0, 8.4.0, 9.3.0, and 10.2.0, but it probably works with other versions as well.
 
 Download plugin headers.
-The exact package name depends on the `gcc` major version (e.g. `gcc-7-plugin-dev` for 7.4.0).
+The exact package name depends on the `gcc` major version (e.g. `gcc-9-plugin-dev` for 9.3.0).
 
 ```shell
-$ sudo apt-get install gcc-7-plugin-dev
+$ sudo apt-get install gcc-9-plugin-dev
 ```
 
 Then clone and build.

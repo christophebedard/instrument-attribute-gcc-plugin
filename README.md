@@ -118,10 +118,10 @@ instrumented function: (test/test.c:19) main
 
 ## Tracing example with LTTng
 
-[Install LTTng and babeltrace](https://lttng.org/docs/v2.10/#doc-installing-lttng) (this only requires userspace tracing).
+Install [LTTng](https://lttng.org/docs/v2.10/#doc-installing-lttng) (this only requires userspace tracing).
 
 ```shell
-$ sudo apt-get install lttng-tools liblttng-ust-dev
+$ sudo apt-get install lttng-tools liblttng-ust-dev babeltrace
 ```
 
 Start a session daemon if it's not already running.
@@ -164,9 +164,10 @@ $ lttng stop
 $ lttng destroy
 ```
 
-Use babeltrace to view the output.
+Use [babeltrace](https://babeltrace.org/#bt1-get) to view the output.
 
 ```shell
+$ sudo apt-get install babeltrace
 $ babeltrace my-test-trace/
 ```
 

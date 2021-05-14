@@ -19,7 +19,9 @@
 
 #include "utils.h"
 
-#define TEST_START() printf("%s\n", __FUNCTION__)
+#define TESTS_START() printf("Starting tests...\n")
+#define TESTS_END() printf("Tests done!\n")
+#define TEST_START() printf("\t%s\n", __FUNCTION__)
 
 void test_strdup_()
 {
@@ -137,9 +139,13 @@ void test_list_strstr()
 
 int main()
 {
+  TESTS_START();
+
   test_strdup_();
   test_count();
   test_string_list();
   test_list_strstr();
+
+  TESTS_END();
   return 0;
 }

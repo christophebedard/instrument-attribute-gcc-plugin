@@ -14,6 +14,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <stdio.h>
+#include <assert.h>
 
 #include "gcc-plugin.h"
 
@@ -22,6 +23,8 @@
 #include "stringpool.h"
 #include "tree.h"
 #include "attribs.h"
+
+#include "utils.h"
 
 int plugin_is_GPL_compatible;
 
@@ -47,16 +50,6 @@ const char * ARG_INCLUDE_FUNCTION_LIST = "include-function-list";
 bool is_debug = false;
 bool is_verbose = false;
 
-/// Dynamic strings list.
-struct string_list {
-  /// String array.
-  char ** data;
-  /// Number of strings in the array.
-  size_t len;
-  /// Actual length of the array, could be greater than len.
-  size_t data_len;
-};
-
 struct string_list include_files = {};
 struct string_list include_functions = {};
 
@@ -81,50 +74,6 @@ static void register_attributes(void * event_data, void * data)
   register_attribute(&instrument_function_attr);
 }
 
-/// Custom strdup.
-char * strdup_(const char * str)
-{
-  size_t len = strlen(str) + 1;
-  char * dup_str = new char[len];
-  memcpy(dup_str, str, len);
-  return dup_str;
-}
-
-/// Count the number of occurrences of the given character in the given string.
-size_t count_characters(const char * str, const char * character)
-{
-  const char * p = str;
-  size_t count = 0;
-
-  do {
-    if(*p == *character) count++;
-  } while (*(p++));
-
-  return count;
-}
-
-/// Split string into list using given separator.
-void split_str(char * str, const char * sep, struct string_list * list)
-{
-  // Could be wrong, e.g. "a,,b"
-  size_t data_len = count_characters(str, sep) + 1;
-  list->data = new char*[data_len];
-
-  char * rest = NULL;
-  char * token;
-  size_t len = 0;
-  for (token = strtok_r(str, sep, &rest); NULL != token; token = strtok_r(NULL, sep, &rest)) {
-    // Only use it if it's not empty
-    if (strlen(token) > 0) {
-      list->data[len] = strdup_(token);
-      len++;
-    }
-  }
-
-  list->len = len;
-  list->data_len = data_len;
-}
-
 void print_list(struct string_list * list)
 {
   printf("\t\tlist of size %ld: ", list->len);
@@ -132,17 +81,6 @@ void print_list(struct string_list * list)
     printf("%s, ", list->data[i]);
   }
   printf("\n");
-}
-
-/// Check if a string in the list is a substring of the given string.
-char * list_strstr(struct string_list * list, const char * str1)
-{
-  for (size_t i = 0; i < list->len; i++) {
-    if (NULL != strstr(str1, list->data[i])) {
-      return list->data[i];
-    }
-  }
-  return NULL;
 }
 
 bool should_instrument_function(tree fndecl)
@@ -159,7 +97,7 @@ bool should_instrument_function(tree fndecl)
 
     // Check if an element in the list is a substring of the function's file's path
     DEBUG("\tchecking file: %s\n", function_file);
-    char * result = list_strstr(&include_files, function_file);
+    const char * result = list_strstr(&include_files, function_file);
     if (NULL != result) {
       VERBOSE("\t\tfunction instrumented from file list: %s (%s)\n", result, get_name(fndecl));
       return true;
@@ -172,7 +110,7 @@ bool should_instrument_function(tree fndecl)
 
     // Check if the function name is in the list
     DEBUG("\tchecking function: %s\n", function_name);
-    char * result = list_strstr(&include_functions, function_name);
+    const char * result = list_strstr(&include_functions, function_name);
     if (NULL != result) {
       VERBOSE("\t\tfunction instrumented from function name list: %s\n", result);
       return true;
@@ -211,7 +149,7 @@ void handle(void * event_data, void * data)
 
 void parse_plugin_args(struct plugin_name_args * plugin_info)
 {
-  int argc = plugin_info->argc;
+  const int argc = plugin_info->argc;
   struct plugin_argument * argv = plugin_info->argv;
 
   VERBOSE("Parameters:\n");
@@ -248,14 +186,6 @@ void check_verbose()
     is_debug = true;
     is_verbose = true;
   }
-}
-
-void free_list(struct string_list * list)
-{
-  for (size_t i = 0; i < list->data_len; i++) {
-    free(list->data[i]);
-  }
-  free(list->data);
 }
 
 void plugin_fini(void * gcc_data, void * user_data)

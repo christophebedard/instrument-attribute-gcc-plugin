@@ -11,6 +11,7 @@ GCCPLUGINS_DIR:= $(shell $(TARGET_GCC) -print-file-name=plugin)
 CXX_FLAGS_BASE= -fPIC -O2
 CXXFLAGS+= -I$(GCCPLUGINS_DIR)/include $(CXX_FLAGS_BASE)
 
+.PHONY: test_all verify test test_utils
 all: $(PLUGIN_NAME).so
 
 utils.o: $(UTILS_SOURCE_FILES) $(UTILS_HEADER_FILES)
@@ -37,7 +38,7 @@ test: $(TEST_SOURCE_FILES) $(PLUGIN_NAME).so
 		-fplugin-arg-instrument_attribute-include-function-list=instrumented_with_function_list,random_other_function_name \
 		$< -o test/$@
 
-test_all: test_utils verify test
+test_all: verify test test_utils
 
 trace: test
 	chmod +x trace.sh

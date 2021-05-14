@@ -19,7 +19,7 @@ For example, the self-time of a function may be misleading if only a portion of 
 
 ## Build the plugin
 
-This has been tested with `gcc` 7.4.0 and 9.3.0, but it probably works with other versions as well.
+This has been tested with `gcc` 7.4.0, 7.5.0, 8.4.0, 9.3.0, and 10.2.0, but it probably works with other versions as well.
 
 Download plugin headers.
 The exact package name depends on the `gcc` major version (e.g. `gcc-7-plugin-dev` for 7.4.0).

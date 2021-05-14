@@ -16,6 +16,9 @@ jobs:
             gcc: gcc-7
             gxx: g++-7
           - ubuntu: ubuntu-20.04
+            gcc: gcc-8
+            gxx: g++-8
+          - ubuntu: ubuntu-20.04
             gcc: gcc-9
             gxx: g++-9
           - ubuntu: ubuntu-20.04

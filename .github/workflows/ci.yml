@@ -34,5 +34,6 @@ jobs:
         make TARGET_GCC=${{ matrix.gcc }} CXX=${{ matrix.gxx }}
     - name: Test
       run: |
+        make TARGET_GCC=${{ matrix.gcc }} CXX=${{ matrix.gxx }} test_utils
         make TARGET_GCC=${{ matrix.gcc }} CXX=${{ matrix.gxx }} verify
         make TARGET_GCC=${{ matrix.gcc }} CXX=${{ matrix.gxx }} test

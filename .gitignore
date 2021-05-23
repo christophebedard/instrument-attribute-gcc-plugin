@@ -1,11 +1,13 @@
 # executables
 verify
-test/test
+test/test_end-to-end
 test/test_utils
-
 # directories
-.vscode/
 test-trace/
+test/e2e/trace/
+
+# IDE
+.vscode/
 
 # Prerequisites
 *.d

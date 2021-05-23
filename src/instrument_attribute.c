@@ -54,7 +54,7 @@ struct string_list include_files = {};
 struct string_list include_functions = {};
 
 static struct plugin_info info = {
-  "0.0.1",  // version
+  "0.1.0",  // version
   "This plugin provides the instrument_function attribute and"
     " other flags to enable instrumentation through allow-listing.",
 };

@@ -51,11 +51,12 @@ void __attribute__((instrument_function)) instrumented_function()
 
 void NOT_instrumented_function()
 {
-  printf("this is NOT instrumented");
+  printf("this is NOT instrumented\n");
 }
 
 int __attribute__((instrument_function)) main()
 {
+  printf("this is instrumented\n");
   instrumented_function();
   NOT_instrumented_function();
   return 0;
@@ -82,38 +83,55 @@ Similar to `gcc`'s [built-in flags](https://gcc.gnu.org/onlinedocs/gcc/Instrumen
 These matches are done on substrings.
 If the given `file` value is a substring of a file's path, its functions will be instrumented; if the given `sym` value is a substring of a function's user-visible name, it will be instrumented.
 
-## Debugging
+## Verbose mode and debugging
 
-You can use the `-fplugin-arg-instrument_attribute-debug` flag to enable debugging.
+You can use the `VERBOSE` environment variable, i.e. `VERBOSE=1`.
 It will print the functions for which instrumentation is enabled.
 
 ```shell
-$ gcc -fplugin=./instrument_attribute.so -finstrument-functions \
-  -fplugin-arg-instrument_attribute-debug test/test.c -o test/test
-
+$ VERBOSE=1 gcc -Itest/e2e/include \
+    -fplugin=./instrument_attribute.so -finstrument-functions \
+    -fplugin-arg-instrument_attribute-include-file-list=test/e2e/src/some_,test/e2e/include/other/other_file.h \
+    -fplugin-arg-instrument_attribute-include-function-list=instrumented_with_function_list,myawesomelib_,random_other_function_name \
+    -c test/e2e/src/main.c -o test/e2e/obj/main.o
 Plugin: instrument_function attribute
-instrumented function: (test/test.c:4) instrumented_function
-instrumented function: (test/test.c:19) main
+  instrumented function: (test/e2e/include/other/other_file.h:23) other_file_instrumented_with_file_list
+  instrumented function: (test/e2e/src/main.c:28) instrumented_function
+  instrumented function: (test/e2e/src/main.c:38) instrumented_with_function_list
+  instrumented function: (test/e2e/src/main.c:43) main
 ```
 
-You can also use the `VERBOSE` environment variable to get even more information and figure out how functions were instrumented.
+You can also use the `-fplugin-arg-instrument_attribute-debug` flag to enable debugging to get much more information and figure out how functions were instrumented.
+Enabling debugging will also enable verbose mode.
 
 ```shell
-$ VERBOSE=1 gcc -fplugin=./instrument_attribute.so -finstrument-functions \
-  -fplugin-arg-instrument_attribute-include-file-list=test/other \
-  -fplugin-arg-instrument_attribute-include-function-list=instrumented_with_function_list \
-  test/test.c -o test/test
-
-Parameters:
-        include-file-list: test/other
-        include-function-list: instrumented_with_function_list
+$ gcc -Itest/e2e/include -MMD -MP \
+    -fplugin=./instrument_attribute.so -finstrument-functions \
+    -fplugin-arg-instrument_attribute-debug \
+    -fplugin-arg-instrument_attribute-include-file-list=test/e2e/src/some_,test/e2e/include/other/other_file.h \
+    -fplugin-arg-instrument_attribute-include-function-list=instrumented_with_function_list,myawesomelib_,random_other_function_name \
+    -c test/e2e/src/main.c -o test/e2e/obj/main.o
+Plugin parameter:
+  include-file-list: test/e2e/src/some_,test/e2e/include/other/other_file.h
+    list of size 2: test/e2e/src/some_, test/e2e/include/other/other_file.h, 
+Plugin parameter:
+  include-function-list: instrumented_with_function_list,myawesomelib_,random_other_function_name
+    list of size 3: instrumented_with_function_list, myawesomelib_, random_other_function_name, 
 Plugin: instrument_function attribute
-        function instrumented from file list: test/other (instrumented_with_file_list)
-instrumented function: (test/other/other_file.h:3) instrumented_with_file_list
-instrumented function: (test/test.c:4) instrumented_function
-        function instrumented from function name list: instrumented_with_function_list
-instrumented function: (test/test.c:14) instrumented_with_function_list
-instrumented function: (test/test.c:19) main
+    checking file: test/e2e/include/other/other_file.h
+      function instrumented from file list: test/e2e/include/other/other_file.h (other_file_instrumented_with_file_list)
+  instrumented function: (test/e2e/include/other/other_file.h:23) other_file_instrumented_with_file_list
+    function instrumented from attribute: instrumented_function
+  instrumented function: (test/e2e/src/main.c:28) instrumented_function
+    checking file: test/e2e/src/main.c
+    checking function: not_instrumented_function
+  NOT instrumented function: (test/e2e/src/main.c:33) not_instrumented_function
+    checking file: test/e2e/src/main.c
+    checking function: instrumented_with_function_list
+      function instrumented from function name list: instrumented_with_function_list
+  instrumented function: (test/e2e/src/main.c:38) instrumented_with_function_list
+    function instrumented from attribute: main
+  instrumented function: (test/e2e/src/main.c:43) main
 ```
 
 ## Tracing example with LTTng

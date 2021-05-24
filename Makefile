@@ -48,6 +48,7 @@ test/test_end-to-end: $(TEST_E2E_OBJ) | $(PLUGIN_NAME).so $(TEST_E2E_OBJ_DIR) $(
 $(TEST_E2E_OBJ_DIR)/%.o: $(TEST_E2E_SRC_DIR)/%.c | $(TEST_E2E_OBJ_DIR) $(PLUGIN_NAME).so
 	VERBOSE=1 $(TARGET_GCC) $(TEST_E2E_CPPFLAGS) \
 		-fplugin=./$(PLUGIN_NAME).so -finstrument-functions \
+		-fplugin-arg-instrument_attribute-debug \
 		-fplugin-arg-instrument_attribute-include-file-list=test/e2e/src/some_,test/e2e/include/other/other_file.h \
 		-fplugin-arg-instrument_attribute-include-function-list=instrumented_with_function_list,myawesomelib_,random_other_function_name \
 		-c $< -o $@

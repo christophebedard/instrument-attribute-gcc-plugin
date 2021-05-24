@@ -28,27 +28,27 @@
 
 int plugin_is_GPL_compatible;
 
+const char * ATTRIBUTE_NAME = "instrument_function";
+const char * PLUGIN_NAME = "instrument_function attribute";
 const char * LIST_DELIMITER = ",";
 const char * ARG_DEBUG = "debug";
 const char * ARG_INCLUDE_FILE_LIST = "include-file-list";
 const char * ARG_INCLUDE_FUNCTION_LIST = "include-function-list";
 
-#define ATTRIBUTE_NAME "instrument_function"
-#define DEBUG(...) \
-  do { \
-    if (is_debug) { \
-      printf(__VA_ARGS__); \
-    } \
-  } while (0)
+bool is_verbose = false;
+bool is_debug = false;
 #define VERBOSE(...) \
   do { \
     if (is_verbose) { \
       printf(__VA_ARGS__); \
     } \
   } while (0)
-
-bool is_debug = false;
-bool is_verbose = false;
+#define DEBUG(...) \
+  do { \
+    if (is_debug) { \
+      printf(__VA_ARGS__); \
+    } \
+  } while (0)
 
 struct string_list include_files = {};
 struct string_list include_functions = {};
@@ -76,7 +76,7 @@ static void register_attributes(void * event_data, void * data)
 
 void print_list(struct string_list * list)
 {
-  printf("\t\tlist of size %ld: ", list->len);
+  printf("    list of size %ld: ", list->len);
   for (size_t i = 0; i < list->len; i++) {
     printf("%s, ", list->data[i]);
   }
@@ -87,7 +87,7 @@ bool should_instrument_function(tree fndecl)
 {
   // If the function has our attribute, enable instrumentation
   if (NULL_TREE != lookup_attribute(ATTRIBUTE_NAME, DECL_ATTRIBUTES(fndecl))) {
-    VERBOSE("\tfunction instrumented from attribute: %s\n", get_name(fndecl));
+    DEBUG("    function instrumented from attribute: %s\n", get_name(fndecl));
     return true;
   }
 
@@ -96,10 +96,10 @@ bool should_instrument_function(tree fndecl)
     const char * function_file = DECL_SOURCE_FILE(fndecl);
 
     // Check if an element in the list is a substring of the function's file's path
-    DEBUG("\tchecking file: %s\n", function_file);
+    DEBUG("    checking file: %s\n", function_file);
     const char * result = list_strstr(&include_files, function_file);
     if (NULL != result) {
-      VERBOSE("\t\tfunction instrumented from file list: %s (%s)\n", result, get_name(fndecl));
+      DEBUG("      function instrumented from file list: %s (%s)\n", result, get_name(fndecl));
       return true;
     }
   }
@@ -109,10 +109,10 @@ bool should_instrument_function(tree fndecl)
     const char * function_name = lang_hooks.decl_printable_name (fndecl, 1);
 
     // Check if the function name is in the list
-    DEBUG("\tchecking function: %s\n", function_name);
+    DEBUG("    checking function: %s\n", function_name);
     const char * result = list_strstr(&include_functions, function_name);
     if (NULL != result) {
-      VERBOSE("\t\tfunction instrumented from function name list: %s\n", result);
+      DEBUG("      function instrumented from function name list: %s\n", result);
       return true;
     }
   }
@@ -125,11 +125,11 @@ void handle(void * event_data, void * data)
   tree fndecl = (tree) event_data;
 
   // Make sure it's a function
-  if (TREE_CODE(fndecl) == FUNCTION_DECL) {
+  if (FUNCTION_DECL == TREE_CODE(fndecl)) {
     // Check if the function should be instrumented
     if (should_instrument_function(fndecl)) {
-      DEBUG(
-        "instrumented function: (%s:%d) %s\n",
+      VERBOSE(
+        "  instrumented function: (%s:%d) %s\n",
         DECL_SOURCE_FILE(fndecl),
         DECL_SOURCE_LINE(fndecl),
         get_name(fndecl));
@@ -138,7 +138,7 @@ void handle(void * event_data, void * data)
     // Otherwise explicitly disable it
     else {
       DEBUG(
-        "NOT instrumented function: (%s:%d) %s\n",
+        "  NOT instrumented function: (%s:%d) %s\n",
         DECL_SOURCE_FILE(fndecl),
         DECL_SOURCE_LINE(fndecl),
         get_name(fndecl));
@@ -152,16 +152,18 @@ void parse_plugin_args(struct plugin_name_args * plugin_info)
   const int argc = plugin_info->argc;
   struct plugin_argument * argv = plugin_info->argv;
 
-  VERBOSE("Parameters:\n");
   for (int i = 0; i < argc; ++i) {
     // Check for debug argument, and enable debug mode if found
     if (0 == strncmp(argv[i].key, ARG_DEBUG, strlen(ARG_DEBUG))) {
       is_debug = true;
+      // Also enable verbose
+      is_verbose = true;
     }
     // Check for file list
     else if (0 == strncmp(argv[i].key, ARG_INCLUDE_FILE_LIST, strlen(ARG_INCLUDE_FILE_LIST))) {
       char * include_file_list = argv[i].value;
-      VERBOSE("\t%s: %s\n", argv[i].key, include_file_list);
+      DEBUG("Plugin parameter:\n");
+      DEBUG("  %s: %s\n", argv[i].key, include_file_list);
       split_str(include_file_list, LIST_DELIMITER, &include_files);
       if (is_debug) {
         print_list(&include_files);
@@ -170,7 +172,8 @@ void parse_plugin_args(struct plugin_name_args * plugin_info)
     // Check for function list
     else if (0 == strncmp(argv[i].key, ARG_INCLUDE_FUNCTION_LIST, strlen(ARG_INCLUDE_FUNCTION_LIST))) {
       char * include_function_list = argv[i].value;
-      VERBOSE("\t%s: %s\n", argv[i].key, include_function_list);
+      DEBUG("Plugin parameter:\n");
+      DEBUG("  %s: %s\n", argv[i].key, include_function_list);
       split_str(include_function_list, LIST_DELIMITER, &include_functions);
       if (is_debug) {
         print_list(&include_functions);
@@ -182,8 +185,7 @@ void parse_plugin_args(struct plugin_name_args * plugin_info)
 void check_verbose()
 {
   char * verbose_value = secure_getenv("VERBOSE");
-  if (verbose_value != NULL && strncmp(verbose_value, "1", 1) == 0) {
-    is_debug = true;
+  if (NULL != verbose_value && 0 == strncmp(verbose_value, "1", 1)) {
     is_verbose = true;
   }
 }
@@ -201,7 +203,7 @@ int plugin_init(
   check_verbose();
   parse_plugin_args(plugin_info);
 
-  DEBUG("Plugin: instrument_function attribute\n");
+  VERBOSE("Plugin: %s\n", PLUGIN_NAME);
 
   register_callback(
     plugin_info->base_name,

@@ -42,21 +42,19 @@ To use this plugin when building your own application with `gcc`, add the `instr
 For example, to instrument `main()` and `instrumented_function()`, but not `NOT_instrumented_function()`:
 
 ```c
-#include <stdio.h>
-
 void __attribute__((instrument_function)) instrumented_function()
 {
-  printf("this is instrumented\n");
+  // This is instrumented
 }
 
 void NOT_instrumented_function()
 {
-  printf("this is NOT instrumented\n");
+  // This is NOT instrumented
 }
 
 int __attribute__((instrument_function)) main()
 {
-  printf("this is instrumented\n");
+  // This is instrumented
   instrumented_function();
   NOT_instrumented_function();
   return 0;

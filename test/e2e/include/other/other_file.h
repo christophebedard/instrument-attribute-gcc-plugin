@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Christophe Bedard
+// Copyright (c) 2019-2021 Christophe Bedard
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,9 @@
 
 #include <stdio.h>
 
-void instrumented_with_file_list()
+void other_file_instrumented_with_file_list()
 {
-  printf("this can be instrumented via include-file-list\n");
+  // Using a path to the header file since
+  // that's the file that contains the implementation
+  printf("instrumented via include-file-list\n");
 }

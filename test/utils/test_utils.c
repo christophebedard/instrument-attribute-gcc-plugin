@@ -20,7 +20,7 @@
 #include "utils.h"
 
 #define TESTS_START() printf("Starting tests...\n")
-#define TESTS_END() printf("Tests done!\n")
+#define TESTS_END() printf("All tests passed!\n")
 #define TEST_START() printf("\t%s\n", __FUNCTION__)
 
 void test_strdup_()

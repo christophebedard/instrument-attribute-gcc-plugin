@@ -19,8 +19,31 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set -ex
+if [[ $# -ne 2 ]] ; then
+  echo 'Usage: trace.sh EXECUTABLE_TO_TRACE TRACE_OUTPUT_DIR'
+  exit 1
+fi
 
-bash test/trace.sh test/test_end-to-end test-trace/
+set -e # -x
 
-babeltrace test-trace/ | grep ":func_.*:"
+exectutable=$1
+trace_output_dir=$2
+
+lttng create test --output=${trace_output_dir}
+
+lttng enable-event -c testchan -u lttng_ust_statedump:start
+lttng enable-event -c testchan -u lttng_ust_statedump:end
+lttng enable-event -c testchan -u lttng_ust_statedump:bin_info
+lttng enable-event -c testchan -u lttng_ust_statedump:build_id
+
+lttng enable-event -c testchan -u lttng_ust_cyg_profile_fast:func_entry
+lttng enable-event -c testchan -u lttng_ust_cyg_profile_fast:func_exit
+
+lttng add-context -u -t vpid -t vtid -t procname -t ip
+
+lttng start
+
+LD_PRELOAD=/usr/lib/x86_64-linux-gnu/liblttng-ust-cyg-profile-fast.so ${exectutable}
+
+lttng stop
+lttng destroy

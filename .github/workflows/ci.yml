@@ -32,6 +32,11 @@ jobs:
         sudo apt-get update && sudo apt-get install -q -y ${{ matrix.gcc }} ${{ matrix.gxx }} ${{ matrix.gcc }}-plugin-dev
         ${{ matrix.gcc }} --version
         ${{ matrix.gxx }} --version
+    - name: Install test dependencies
+      run: |
+        sudo apt-get install -q -y lttng-tools liblttng-ust-dev babeltrace
+        lttng --version
+        babeltrace
     - name: Build
       run: |
         make TARGET_GCC=${{ matrix.gcc }} CXX=${{ matrix.gxx }}

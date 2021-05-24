@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Christophe Bedard
+// Copyright (c) 2021 Christophe Bedard
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,28 +19,12 @@
 // SOFTWARE.
 
 #include <stdio.h>
-#include "other/other_file.h"
 
-void __attribute__((instrument_function)) instrumented_function()
-{
-  printf("this is instrumented\n");
-}
+#include "some_dir/some_other_header.h"
 
-void NOT_instrumented_function()
+void some_other_header_instrumented_with_file_list_and_attribute()
 {
-  printf("this is NOT instrumented\n");
-}
-
-void instrumented_with_function_list()
-{
-  printf("this can be instrumented via include-function-list\n");
-}
-
-int __attribute__((instrument_function)) main()
-{
-  instrumented_function();
-  NOT_instrumented_function();
-  instrumented_with_function_list();
-  instrumented_with_file_list();
-  return 0;
+  // Using a partial path to the source file since
+  // that's the file that contains the implementation
+  printf("instrumented via include-file-list with a 'dir/file_' prefix and with attribute\n");
 }

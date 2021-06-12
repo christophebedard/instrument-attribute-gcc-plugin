@@ -9,7 +9,7 @@ When enabling function instrumentation (`-finstrument-functions`), the [built-in
 This plugin allows you to instrument individual functions, by:
 
 * adding the `instrument_function` attribute to a function
-* giving a list of file paths (`-fplugin-arg-instrument_attribute-include-file-list=file,file,…`)
+* giving a list of paths to files with function definitions (`-fplugin-arg-instrument_attribute-include-file-list=file,file,…`)
 * giving a list of function names (`-fplugin-arg-instrument_attribute-include-function-list=sym,sym,…`)
 
 For example, you might want to use this when you want to instrument only select functions and avoid instrumenting _everything_, since it adds a measurable overhead.

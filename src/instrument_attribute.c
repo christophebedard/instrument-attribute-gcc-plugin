@@ -125,25 +125,27 @@ void handle(void * event_data, void * data)
   tree fndecl = (tree) event_data;
 
   // Make sure it's a function
-  if (FUNCTION_DECL == TREE_CODE(fndecl)) {
-    // Check if the function should be instrumented
-    if (should_instrument_function(fndecl)) {
-      VERBOSE(
-        "  instrumented function: (%s:%d) %s\n",
-        DECL_SOURCE_FILE(fndecl),
-        DECL_SOURCE_LINE(fndecl),
-        get_name(fndecl));
-      DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT(fndecl) = 0;
-    }
-    // Otherwise explicitly disable it
-    else {
-      DEBUG(
-        "  NOT instrumented function: (%s:%d) %s\n",
-        DECL_SOURCE_FILE(fndecl),
-        DECL_SOURCE_LINE(fndecl),
-        get_name(fndecl));
-      DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT(fndecl) = 1;
-    }
+  if (FUNCTION_DECL != TREE_CODE(fndecl)) {
+    return;
+  }
+
+  // Check if the function should be instrumented
+  if (should_instrument_function(fndecl)) {
+    VERBOSE(
+      "  instrumented function: (%s:%d) %s\n",
+      DECL_SOURCE_FILE(fndecl),
+      DECL_SOURCE_LINE(fndecl),
+      get_name(fndecl));
+    DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT(fndecl) = 0;
+  }
+  // Otherwise explicitly disable it
+  else {
+    DEBUG(
+      "  NOT instrumented function: (%s:%d) %s\n",
+      DECL_SOURCE_FILE(fndecl),
+      DECL_SOURCE_LINE(fndecl),
+      get_name(fndecl));
+    DECL_NO_INSTRUMENT_FUNCTION_ENTRY_EXIT(fndecl) = 1;
   }
 }
 

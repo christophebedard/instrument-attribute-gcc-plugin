@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - main
   schedule:
     # Schedule twice a month, on the 1st and the 15th
     - cron: '0 0 1,15 * *'

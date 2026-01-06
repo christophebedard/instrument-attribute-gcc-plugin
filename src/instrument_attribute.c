@@ -34,6 +34,7 @@ const char * LIST_DELIMITER = ",";
 const char * ARG_DEBUG = "debug";
 const char * ARG_INCLUDE_FILE_LIST = "include-file-list";
 const char * ARG_INCLUDE_FUNCTION_LIST = "include-function-list";
+const char * ARG_INCLUDE_EXACT_FUNCTION_LIST = "include-exact-function-list";
 
 bool is_verbose = false;
 bool is_debug = false;
@@ -52,6 +53,7 @@ bool is_debug = false;
 
 struct string_list include_files = {};
 struct string_list include_functions = {};
+struct string_list include_exact_functions = {};
 
 static struct plugin_info info = {
   "0.2.0",  // version
@@ -66,7 +68,7 @@ static struct attribute_spec instrument_function_attr = {
   false,
   false,
   false,
-  NULL,  // No need for a handling function
+  false,  // No need for a handling function
 };
 
 static void register_attributes(void * event_data, void * data)
@@ -113,6 +115,19 @@ bool should_instrument_function(tree fndecl)
     const char * result = list_strstr(&include_functions, function_name);
     if (NULL != result) {
       DEBUG("      function instrumented from function name list: %s\n", result);
+      return true;
+    }
+  }
+
+  // If the function is in the include-exact-function-list, enable instrumentation
+  if (include_exact_functions.len > 0) {
+    const char * function_name = lang_hooks.decl_printable_name (fndecl, 1);
+
+    // Check if the function name exactly matches an entry in the list
+    DEBUG("    checking function (exact): %s\n", function_name);
+    const char * result = list_strcmp(&include_exact_functions, function_name);
+    if (NULL != result) {
+      DEBUG("      function instrumented from exact function name list: %s\n", result);
       return true;
     }
   }
@@ -181,6 +196,16 @@ void parse_plugin_args(struct plugin_name_args * plugin_info)
         print_list(&include_functions);
       }
     }
+    // Check for exact function list
+    else if (0 == strncmp(argv[i].key, ARG_INCLUDE_EXACT_FUNCTION_LIST, strlen(ARG_INCLUDE_EXACT_FUNCTION_LIST))) {
+      char * include_exact_function_list = argv[i].value;
+      DEBUG("Plugin parameter:\n");
+      DEBUG("  %s: %s\n", argv[i].key, include_exact_function_list);
+      split_str(include_exact_function_list, LIST_DELIMITER, &include_exact_functions);
+      if (is_debug) {
+        print_list(&include_exact_functions);
+      }
+    }
   }
 }
 
@@ -196,6 +221,7 @@ void plugin_fini(void * gcc_data, void * user_data)
 {
   free_list(&include_files);
   free_list(&include_functions);
+  free_list(&include_exact_functions);
 }
 
 int plugin_init(

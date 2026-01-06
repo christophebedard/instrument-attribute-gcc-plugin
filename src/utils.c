@@ -87,3 +87,13 @@ const char * list_strstr(struct string_list * list, const char * str1)
   }
   return NULL;
 }
+
+const char * list_strcmp(struct string_list * list, const char * str1)
+{
+  for (size_t i = 0; i < list->len; i++) {
+    if (0 == strcmp(str1, list->data[i])) {
+      return list->data[i];
+    }
+  }
+  return NULL;
+}

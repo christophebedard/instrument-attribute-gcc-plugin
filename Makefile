@@ -51,6 +51,7 @@ $(TEST_E2E_OBJ_DIR)/%.o: $(TEST_E2E_SRC_DIR)/%.c | $(TEST_E2E_OBJ_DIR) $(PLUGIN_
 		-fplugin-arg-instrument_attribute-debug \
 		-fplugin-arg-instrument_attribute-include-file-list=test/e2e/src/some_,test/e2e/include/other/other_file.h \
 		-fplugin-arg-instrument_attribute-include-function-list=instrumented_with_function_list,myawesomelib_,random_other_function_name \
+		-fplugin-arg-instrument_attribute-include-exact-function-list=exact_match_function \
 		-c $< -o $@
 -include $(TEST_E2E_OBJ:.o=.d)
 

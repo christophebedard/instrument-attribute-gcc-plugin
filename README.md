@@ -11,6 +11,7 @@ This plugin allows you to instrument individual functions, by:
 * adding the `instrument_function` attribute to a function
 * giving a list of paths to files with function definitions (`-fplugin-arg-instrument_attribute-include-file-list=file,file,…`)
 * giving a list of function names (`-fplugin-arg-instrument_attribute-include-function-list=sym,sym,…`)
+* giving a list of function names for exact matching (`-fplugin-arg-instrument_attribute-include-exact-function-list=sym,sym,…`)
 
 For example, you might want to use this when you want to instrument only select functions and avoid instrumenting _everything_, since it adds a measurable overhead.
 
@@ -78,8 +79,15 @@ Similar to `gcc`'s [built-in flags](https://gcc.gnu.org/onlinedocs/gcc/Instrumen
 -fplugin-arg-instrument_attribute-include-function-list=sym,sym,…
 ```
 
-These matches are done on substrings.
+```
+-fplugin-arg-instrument_attribute-include-exact-function-list=sym,sym,…
+```
+
+These matches are done on substrings for `include-function-list` and `include-file-list`.
 If the given `file` value is a substring of a file's path, its functions will be instrumented; if the given `sym` value is a substring of a function's user-visible name, it will be instrumented.
+
+For `include-exact-function-list`, matches are done on exact function names only.
+This prevents false positives when a function name is a substring of another (e.g., `function_name` matching `function_name_extended`).
 
 ## Verbose mode and debugging
 

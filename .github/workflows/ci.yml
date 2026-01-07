@@ -10,33 +10,50 @@ on:
 jobs:
   gcc:
     strategy:
+      fail-fast: false
       matrix:
         include:
-          - ubuntu: ubuntu-18.04
-            gcc: gcc-7
-            gxx: g++-7
-          - ubuntu: ubuntu-20.04
+          # 18.04 is too old to get working with newer GitHub actions, so skip it for now
+          # - ubuntu: 18.04
+          #   gcc: gcc-7
+          #   gxx: g++-7
+          - ubuntu: 20.04
             gcc: gcc-8
             gxx: g++-8
-          - ubuntu: ubuntu-20.04
+          - ubuntu: 24.04
             gcc: gcc-9
             gxx: g++-9
-          - ubuntu: ubuntu-20.04
+          - ubuntu: 24.04
             gcc: gcc-10
             gxx: g++-10
-    runs-on: ${{ matrix.ubuntu }}
+          - ubuntu: 24.04
+            gcc: gcc-11
+            gxx: g++-11
+          - ubuntu: 24.04
+            gcc: gcc-12
+            gxx: g++-12
+          - ubuntu: 24.04
+            gcc: gcc-13
+            gxx: g++-13
+          - ubuntu: 24.04
+            gcc: gcc-14
+            gxx: g++-14
+    runs-on: ubuntu-latest
+    container: ubuntu:${{ matrix.ubuntu }}
     steps:
-    - uses: actions/checkout@v2
     - name: Install dependencies
       run: |
-        sudo apt-get update && sudo apt-get install -q -y ${{ matrix.gcc }} ${{ matrix.gxx }} ${{ matrix.gcc }}-plugin-dev
+        apt update
+        DEBIAN_FRONTEND=noninteractive apt install -q -y tzdata
+        apt install -q -y build-essential ${{ matrix.gcc }} ${{ matrix.gxx }} ${{ matrix.gcc }}-plugin-dev
         ${{ matrix.gcc }} --version
         ${{ matrix.gxx }} --version
     - name: Install test dependencies
       run: |
-        sudo apt-get install -q -y lttng-tools liblttng-ust-dev babeltrace
+        apt install -q -y lttng-tools liblttng-ust-dev babeltrace
         lttng --version
         babeltrace
+    - uses: actions/checkout@v6
     - name: Build
       run: |
         make TARGET_GCC=${{ matrix.gcc }} CXX=${{ matrix.gxx }}

@@ -40,6 +40,16 @@ void instrumented_with_function_list()
   printf("instrumented via include-function-list\n");
 }
 
+void exact_match_function()
+{
+  printf("instrumented via exact function list\n");
+}
+
+void exact_match_function_ex()
+{
+  printf("should NOT be instrumented (substring match but not exact)\n");
+}
+
 int __attribute__((instrument_function)) main()
 {
   printf("instrumented with attribute\n");
@@ -56,5 +66,9 @@ int __attribute__((instrument_function)) main()
   myawesomelib_function_a();
   myawesomelib_function_b();
   mynotawesomelib_function_c();
+
+  exact_match_function();
+  exact_match_function_ex();
+
   return 0;
 }

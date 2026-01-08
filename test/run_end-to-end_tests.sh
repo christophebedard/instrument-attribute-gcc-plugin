@@ -83,7 +83,10 @@ assert_function_traced "myawesomelib_function_a"
 assert_function_traced "myawesomelib_function_b"
 assert_function_not_traced "mynotawesomelib_function_c"
 
-assert_num_traced_functions 8
+assert_function_traced "exact_match_function"
+assert_function_not_traced "exact_match_function_ex"
+
+assert_num_traced_functions 9
 
 echo -e ""
 

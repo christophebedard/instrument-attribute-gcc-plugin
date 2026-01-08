@@ -48,3 +48,11 @@ void free_list(struct string_list * list);
  * \return the match (const string) from the list, or NULL.
  */
 const char * list_strstr(struct string_list * list, const char * str1);
+
+/// Check if the given string exactly matches any string in the list
+/**
+ * \param list the list
+ * \param str1 the string
+ * \return the match (const string) from the list, or NULL.
+ */
+ const char * list_strcmp(struct string_list * list, const char * str1);
